@@ -76,7 +76,7 @@ ESP32_IMAGE_LIBRARIES := $(shell \
 	  LT_PLATFORM_ROOT=$(LT_PLATFORM_ROOT) LT_PLATFORM=$(LT_PLATFORM) \
 	   LT_PRODUCT_ROOT=$(LT_PRODUCT_ROOT)   LT_PRODUCT=$(LT_PRODUCT) \
 	    LT_TARGET_ROOT=$(LT_TARGET_ROOT) LT_BUILD_MODE=$(LT_BUILD_MODE) \
-	     MAKECMDGOALS=listlibraries $(MAKE) --no-print-directory -f $(LT_OS_ROOT)/build/Makefile listlibraries | grep -v LTBootloader)
+	     MAKECMDGOALS=listlibraries $(MAKE) $(LT_SUBMAKE_QUIET_VAR) --no-print-directory -f $(LT_OS_ROOT)/build/Makefile listlibraries | grep -v LTBootloader)
 ESP32_IMAGE_LIBRARIES_L := $(foreach ltlibrary, $(foreach ltlibrary, $(ESP32_IMAGE_LIBRARIES), $(basename $(notdir $(ltlibrary)))), -l$(ltlibrary:lib%=%))
 
 ESP32_ELF_DEPENDENCIES := $(ESP32_LD_SCRIPT_PATH)/*
