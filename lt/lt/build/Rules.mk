@@ -166,9 +166,9 @@ LT_PROJECT_ALL_TARGETS := 					            \
 			$(LT_PROJECT_OBJ_DIR)			            \
 			$(LT_PROJECT_OBJ_SUBDIRS)		            \
             $(LT_ARBOLATED_RESOURCE_TREE_INCLUDE_DIR)   \
-			$(LT_PROJECT_PREBUILD_TARGETS)	            \
-			$(LT_PROJECT_TARGETS)			            \
-			$(LT_PROJECT_POSTBUILD_TARGETS)
+		$(LT_PROJECT_PREBUILD_TARGETS)	            \
+		$(LT_PROJECT_TARGETS)			            \
+		$(LT_PROJECT_POSTBUILD_TARGETS)
 
 ifneq (yes, $(LT_DISABLE_STATS))
     LT_PROJECT_ALL_TARGETS += $(LT_PROJECT_STATS_TARGETS)
@@ -249,6 +249,9 @@ $(LT_PROJECT_S2_OBJ_FILES): $(LT_PROJECT_OBJ_DIR)/%.o : $(LT_PROJECT_SOURCE_DIR)
 #LT_DUMPER = $(info $(shell printf "%-38s = %s\n" ${1} "${${1}}"))
 #LT_OUT := $(info ______________________)
 #$(call LT_DUMPER,LT_STATIC_LIB_TARGET_NAME)
+
+ARBOLATE:
+	@echo ARBOLATE target triggered
 #$(call LT_DUMPER,LT_SHARED_LIB_TARGET_NAME)
 #$(call LT_DUMPER,LT_EXECUTABLE_TARGET_NAME)
 #$(call LT_DUMPER,LT_PROJECT_ROOT_IMPL_OBJ_FILE)

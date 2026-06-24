@@ -25,7 +25,7 @@ ST_LT_LIBRARIES := $(shell \
 	  LT_PLATFORM_ROOT=$(LT_PLATFORM_ROOT) LT_PLATFORM=$(LT_PLATFORM) \
 	   LT_PRODUCT_ROOT=$(LT_PRODUCT_ROOT)   LT_PRODUCT=$(LT_PRODUCT) \
 	    LT_TARGET_ROOT=$(LT_TARGET_ROOT) LT_BUILD_MODE=$(LT_BUILD_MODE) \
-	     MAKECMDGOALS=listlibraries $(MAKE) --no-print-directory listlibraries | grep -v LTBootloader)
+	     MAKECMDGOALS=listlibraries $(MAKE) --no-print-directory -f $(LT_OS_ROOT)/build/Makefile listlibraries | grep -v LTBootloader)
 ST_LT_LIBRARIES_  := $(foreach ltlibrary, $(ST_LT_LIBRARIES),$(basename $(notdir $(ltlibrary))))
 ST_LT_LIBRARIES_L := $(foreach ltlibrary, $(ST_LT_LIBRARIES_),-l$(ltlibrary:lib%=%))
 
