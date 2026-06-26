@@ -92,8 +92,8 @@
 #                              An LT_PLATFORM_ROOT must have a build/platform/ subdirectory to qualify.
 #    LT_TARGET_ROOT          - the path in which the LT_MASTER_MAKEFILE will create a targets/
 #                              directory which will receive all intermediate and final build artifacts.
-#                              If not specified, the LT_MASTER_MAKEFILE will derive it as the root of
-#                              the lt-sdk repo (the directory containing LT_OS_ROOT, i.e. LT_ROOTS_BASE).
+#                              If not specified, the LT_MASTER_MAKEFILE will derive it as LT_ROOTS_BASE
+#                              (the directory containing lt/, platforms/, and products/; parent of LT_OS_ROOT).
 #    LT_PRODUCT              - the LT_PRODUCT variant within the product root to build for.  The term LT_PRODUCT_ROOT
 #                              is synonymous with "product family" and the term LT_PRODUCT is synonymous with "product
 #                              variant within a product family."  Product variants are located in subdirectories of the
