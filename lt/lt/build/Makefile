@@ -92,8 +92,8 @@
 #                              An LT_PLATFORM_ROOT must have a build/platform/ subdirectory to qualify.
 #    LT_TARGET_ROOT          - the path in which the LT_MASTER_MAKEFILE will create a targets/
 #                              directory which will receive all intermediate and final build artifacts.
-#                              If not specified, the LT_MASTER_MAKEFILE will derive it as ../..
-#                              relative to this Makefile location i.e. at the same level LT_OS_ROOT exists in.
+#                              If not specified, the LT_MASTER_MAKEFILE will derive it as the root of
+#                              the lt-sdk repo (the directory containing LT_OS_ROOT, i.e. LT_ROOTS_BASE).
 #    LT_PRODUCT              - the LT_PRODUCT variant within the product root to build for.  The term LT_PRODUCT_ROOT
 #                              is synonymous with "product family" and the term LT_PRODUCT is synonymous with "product
 #                              variant within a product family."  Product variants are located in subdirectories of the
@@ -206,10 +206,7 @@ endif
 
 # LT_TARGET_ROOT
 ifeq (,$(LT_TARGET_ROOT))
-    LT_TARGET_ROOT                  := $(abspath $(LT_ROOTS_BASE)/..)
-    ifeq (yes, $(shell if [ -d $(LT_TARGET_ROOT)/.git ] ; then echo yes; else echo no; fi;))
-      LT_TARGET_ROOT		        := $(abspath $(LT_TARGET_ROOT)/..)
-    endif
+    LT_TARGET_ROOT                  := $(abspath $(LT_ROOTS_BASE))
 else
     LT_TARGET_ROOT                  := $(abspath $(LT_TARGET_ROOT))
 endif
