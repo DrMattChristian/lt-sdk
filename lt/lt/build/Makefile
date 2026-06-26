@@ -1045,7 +1045,7 @@ LT_SDKDOCS_PREVIEW_BROWSER          ?= firefox
 LT_TOOLCHAIN_HOST_ARCHITECTURE      := $(shell uname -m)
 LT_TOOLCHAIN_HOST_OS_NAME           := $(shell uname -s)
 # set default vendor toolchain root location
-LT_VENDOR_TOOLCHAINS_DIR            ?= $(abspath $(HOME)/lt-vendor-toolchains)
+LT_VENDOR_TOOLCHAINS_DIR            ?= $(abspath $(LT_OS_ROOT)/lt-vendor-toolchains)
 # allow the caller to set default vendor toolchain tarball location
 LT_VENDOR_TOOLCHAIN_TARBALLS_DIR    ?= $(abspath $(LT_OS_ROOT)/../../lt-toolchains)
 # output of build info for TeamCity
