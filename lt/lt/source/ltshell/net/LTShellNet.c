@@ -48,7 +48,7 @@ static int LTShellNet_Help(LTShell hShell, int argc, const char *argv[]);
 
 static u16 HasArg(int argc, const char *argv[], const char *pattern) {
     // argv[0] is command and is skipped
-    for (u16 n = 1; n < argc; n++) {
+    for (int n = 1; n < argc; n++) {
         if (lt_strcmp(argv[n], pattern) == 0) return n;
     }
     return 0;

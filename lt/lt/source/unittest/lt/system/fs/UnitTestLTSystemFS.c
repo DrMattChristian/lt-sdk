@@ -114,7 +114,7 @@ static u8 *MallocAndWriteArbitraryBytesToFile(Tilt *tilt, LTFile *file, u32 nByt
 }
 
 static void FreeWriteArray(WriteArray writes) {
-    for (u8 i = 0; i < writes.nWrites; i++) {
+    for (u32 i = 0; i < writes.nWrites; i++) {
         lt_free(writes.writeArray[i]);
     }
     lt_free(writes.writeArray);
@@ -139,7 +139,7 @@ static WriteArray RepeatWriteRandomBytesToFile(Tilt *tilt, LTFile *file, u32 nWr
         }
         ++writes.nWrites;
 
-        if (!ExpectFilePosition(tilt, file, (i+1)*nBytesPerWrite)) { // Will report TILT error on failure
+        if (!ExpectFilePosition(tilt, file, (u64)(i+1)*nBytesPerWrite)) { // Will report TILT error on failure
             FreeWriteArray(writes);
             return (WriteArray){NULL, 0, 0};
         }
@@ -153,7 +153,7 @@ static WriteArray RepeatWriteRandomBytesToFile(Tilt *tilt, LTFile *file, u32 nWr
 static bool VerifyReadData(Tilt *tilt, LTFile *file, WriteArray expectedWrites, SeekModification *modArray, u32 modArrayLength) {
     u8 readBuffer[1]; // Buffer of size of 1 to read into
     u64 readPosition = 0;
-    while (readPosition < expectedWrites.nWrites * expectedWrites.nBytesPerWrite) {
+    while (readPosition < (u64)expectedWrites.nWrites * expectedWrites.nBytesPerWrite) {
         /* Read 1 byte */
         u32 bytesRead = file->API->Read(file, 1, readBuffer);
         if (bytesRead != 1) {
@@ -165,7 +165,7 @@ static bool VerifyReadData(Tilt *tilt, LTFile *file, WriteArray expectedWrites, 
         /* Compare 1 read byte with the appropriate expected byte */
         u8 *expectedByte = NULL;
         // First, check modifications if they exist
-        for (u8 i = 0; modArray && i < modArrayLength; i++) {
+        for (u32 i = 0; modArray && i < modArrayLength; i++) {
             SeekModification *current = modArray + i;
             if (readPosition >= current->position && readPosition < current->position + current->size) {
                 expectedByte = current->data + (readPosition - current->position);

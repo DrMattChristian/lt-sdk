@@ -133,7 +133,7 @@ ParseStatusChunks(u8 * pPayload, u32 nPayloadLen, TransportFeedback * pFeedback,
             u16 nSymbolSize = ((nPacketChunk & 0x4000) >> 14) + 1;
             u16 nSymbolMask = (1 << nSymbolSize) - 1;
             u16 nNumSymbols = 14 / nSymbolSize;
-            for (u8 i = 0; i < nNumSymbols; ++i) {
+            for (u16 i = 0; i < nNumSymbols; ++i) {
                 u16 nStatusSymbol = (nPacketChunk >> (14 - (nSymbolSize * (i + 1)))) & nSymbolMask;
                 *pTimingSectionLen += nStatusSymbol;
                 if (nStatusSymbol != 0) {

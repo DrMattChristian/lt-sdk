@@ -903,7 +903,7 @@ void convert_chw_to_hwc_float(float* input, float* output,
     if (!input || !output) return;
 
     if (input == output) {
-        float* temp = lt_malloc(w * h * channels * sizeof(float));
+        float* temp = lt_malloc((size_t)w * h * channels * sizeof(float));
         if (!temp) return;
 
         for (int c = 0; c < channels; c++) {
@@ -914,7 +914,7 @@ void convert_chw_to_hwc_float(float* input, float* output,
                 }
             }
         }
-        lt_memcpy(output, temp, w * h * channels * sizeof(float));
+        lt_memcpy(output, temp, (size_t)w * h * channels * sizeof(float));
         lt_free(temp);
 
     } else {

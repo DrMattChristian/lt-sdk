@@ -273,7 +273,7 @@ static LT_SIZE LTBitmaskMemManagerImpl_GetPoolSizes(const LTFixedMemoryPoolConfi
         nBytes = (nBytes + POOL_BUF_ALIGN_MASK) & ~POOL_BUF_ALIGN_MASK;
     }
     for (i = 0; i < nConfigs; i++) {
-        nBytes += cfg[i].nElements * (1 << cfg[i].nBits);
+        nBytes += (LT_SIZE)cfg[i].nElements * (1 << cfg[i].nBits);
         nBytes = (nBytes + POOL_BUF_ALIGN_MASK) & ~POOL_BUF_ALIGN_MASK;
     }
 
@@ -304,7 +304,7 @@ static void LTBitmaskMemManagerImpl_InitializeAllPools(const LTFixedMemoryPoolCo
      */
     for (i = 0; i < nConfigs; i++) {
         LT_SIZE     nPoolBytes;
-        nPoolBytes = cfg[i].nElements * (1 << cfg[i].nBits);
+        nPoolBytes = (LT_SIZE)cfg[i].nElements * (1 << cfg[i].nBits);
         /* align to byte boundary */
         nPoolBytes = (nPoolBytes + POOL_BUF_ALIGN_MASK) & ~POOL_BUF_ALIGN_MASK;
         if (nPoolBytes) {

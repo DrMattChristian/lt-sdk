@@ -113,12 +113,12 @@ LTArrayImpl_GetCount(LTArrayImpl *array) {
 static bool
 LTArrayImpl_SetCount(LTArrayImpl *array, u32 newElementCount) {
     if (!array) return false;
-    u8 *newData = lt_realloc(array->data, newElementCount * array->blockSize);
+    u8 *newData = lt_realloc(array->data, (LT_SIZE)newElementCount * array->blockSize);
     if (!newData && newElementCount) return false;
     array->data = newData;
     if (newElementCount > array->count) {
         /* zero new elements */
-        lt_memset(array->data + array->count * array->blockSize, 0, (newElementCount - array->count) * array->blockSize);
+        lt_memset(array->data + (LT_SIZE)array->count * array->blockSize, 0, (LT_SIZE)(newElementCount - array->count) * array->blockSize);
         array->isSorted = 0;
     }
     array->count    = newElementCount;
@@ -130,7 +130,7 @@ LTArrayImpl_SetCount(LTArrayImpl *array, u32 newElementCount) {
 static void
 LTArrayImpl_Trim(LTArrayImpl *array) {
     if (!array) return;
-    array->data     = lt_realloc(array->data, array->count * array->blockSize);
+    array->data     = lt_realloc(array->data, (LT_SIZE)array->count * array->blockSize);
     array->capacity = array->count;
 }
 
@@ -173,7 +173,7 @@ LTArrayImpl_Insert(LTArrayImpl *array, u32 index, const void *value) {
     if (!array || index > array->count || !AdjustCapacityAsRequired(array)) return -1;
     u8 *valueToSet = array->data + index * array->blockSize;
     /* Move elements beyond index down one position, and increment count */
-    lt_memmove(valueToSet + array->blockSize, valueToSet, (array->count++ - index) * array->blockSize);
+    lt_memmove(valueToSet + array->blockSize, valueToSet, (LT_SIZE)(array->count++ - index) * array->blockSize);
     SetValueAtIndex(array, index, value);
     if (array->count > 1) array->isSorted = 0;
     return index;
@@ -206,7 +206,7 @@ LTArrayImpl_InsertSorted(LTArrayImpl *array, LTArray_CompareFunction *callback, 
     if (compare > 0) index++;
     u8 *valueToSet = array->data + index * array->blockSize;
     /* Move elements beyond index down one position, and increment count */
-    lt_memmove(valueToSet + array->blockSize, valueToSet, (array->count++ - index) * array->blockSize);
+    lt_memmove(valueToSet + array->blockSize, valueToSet, (LT_SIZE)(array->count++ - index) * array->blockSize);
     SetValueAtIndex(array, index, value);
     return index;
 }
@@ -217,7 +217,7 @@ LTArrayImpl_Remove(LTArrayImpl *array, u32 index) {
     u8 *valueToRemove = array->data + index * array->blockSize;
     /* Reduce array by one element but do not decrease capacity */
     array->count--;
-    lt_memmove(valueToRemove, valueToRemove + array->blockSize, (array->count - index) * array->blockSize);
+    lt_memmove(valueToRemove, valueToRemove + array->blockSize, (LT_SIZE)(array->count - index) * array->blockSize);
     if (array->count <= 1) array->isSorted = 1;
 }
 
@@ -261,10 +261,10 @@ LTArrayImpl_Find(LTArrayImpl *array, LTArray_CompareFunction *callback, const vo
 static bool
 LTArrayImpl_CopyArray(LTArrayImpl *destination, LTArrayImpl *source) {
     if (!destination || !source) return false;
-    u8 *newData = lt_realloc(destination->data, source->count * source->blockSize);
+    u8 *newData = lt_realloc(destination->data, (LT_SIZE)source->count * source->blockSize);
     if (!newData && source->count) return false;
     destination->data = newData;
-    if (source->count) lt_memcpy(destination->data, source->data, source->count * source->blockSize);
+    if (source->count) lt_memcpy(destination->data, source->data, (LT_SIZE)source->count * source->blockSize);
     destination->count     = source->count;
     destination->capacity  = source->count;
     destination->blockSize = source->blockSize;
@@ -843,7 +843,7 @@ LTAssociativeArrayImpl_RemoveAll(LTAssociativeArrayImpl *array, bool trim) {
 static void
 LTAssociativeArrayImpl_Trim(LTAssociativeArrayImpl *array) {
     if (!array) return;
-    array->data     = lt_realloc(array->data, array->count * array->blockSize);
+    array->data     = lt_realloc(array->data, (LT_SIZE)array->count * array->blockSize);
     array->capacity = array->count;
 }
 
@@ -897,7 +897,7 @@ LTAssociativeArrayImpl_Set(LTAssociativeArrayImpl *array, const void *key, u16 k
             } else {
                 array->capacity += array->maxIncrementalElements;
             }
-            u8 *newData = lt_realloc(array->data, array->capacity * array->blockSize);
+            u8 *newData = lt_realloc(array->data, (LT_SIZE)array->capacity * array->blockSize);
             if (!newData) {
                 array->capacity = array->count;
                 if (keyPtr) lt_free(keyPtr);
@@ -945,7 +945,7 @@ LTAssociativeArrayImpl_Remove(LTAssociativeArrayImpl *array, const void *key, u1
         }
         /* Reduce array by one element but do not decrease capacity */
         array->count--;
-        lt_memmove(valueToRemove, valueToRemove + array->blockSize, (array->count - index) * array->blockSize);
+        lt_memmove(valueToRemove, valueToRemove + array->blockSize, (LT_SIZE)(array->count - index) * array->blockSize);
     }
 }
 

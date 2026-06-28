@@ -910,10 +910,10 @@ static bool ExpandIncludes(bool *pbContinue, ExpandIncludesClientData *cd) {
 
     u32 nInputSize = 0;
     struct stat file_stat;
-    if (0 != stat(pFilename, &file_stat))                         ErrorBail("failed to stat input file %s", pFilename);
+    if (NULL == (inputFile = fopen(pFilename,  "rb")))            ErrorBail("failed to open input file %s", pFilename);
+    if (0 != fstat(fileno(inputFile), &file_stat))                ErrorBail("failed to stat input file %s", pFilename);
     if (0 == (nInputSize = (u32)file_stat.st_size))               ErrorBail("empty input file %s", pFilename);
     if (NULL == (inputText = lt_malloc(nInputSize + 1)))          ErrorBail("failed to allocate %d bytes for input file contents", (int)nInputSize);
-    if (NULL == (inputFile = fopen(pFilename,  "rb")))            ErrorBail("failed to open input file %s", pFilename);
     if (nInputSize != fread(inputText, 1, nInputSize, inputFile)) ErrorBail("failed to read input file %s", pFilename);
     inputText[nInputSize] = 0;
 

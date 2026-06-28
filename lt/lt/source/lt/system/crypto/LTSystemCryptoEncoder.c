@@ -72,9 +72,9 @@ bool LTSystemCryptoEncoderImpl_EncodeEcdsaSignature(const u8 *signature, u16 sig
     // R: 0x02,0x??,R
     *p = 0x02; // ASN1_INTEGER;
     ++p;
-    u8 i = 0;
+    u32 i = 0;
     for (; i < sigLen / 2 && signature[i] == 0; ++i) ;
-    u8 len = sigLen / 2 - i;
+    u32 len = sigLen / 2 - i;
     if (len == 0 || signature[i] >= 0x80) { // all zero, or the first byte is negative.
         *p = len + 1;
         ++p;

@@ -2513,7 +2513,7 @@ static void MotionSnapshotEventTest(const TiltImplReportingCallbacks *trc) {
         WaitForMotionEventTest(trc, expectedEvents, sub_test_case++);
     }
     s_motion->GetMotionState(&MotionState, &FramesOfMotion, &FramesNoMotion, NULL, NULL, &FramesSinceMotionStart, &SnapshotsUploaded);
-    u32 remainingFramesUntilMinimumDuration = MinFramesMotionEventDuration - FramesSinceMotionStart > 0 ? MinFramesMotionEventDuration - FramesSinceMotionStart : 0;
+    u32 remainingFramesUntilMinimumDuration = (s32)(MinFramesMotionEventDuration - FramesSinceMotionStart) > 0 ? MinFramesMotionEventDuration - FramesSinceMotionStart : 0;
     u32 remainingFramesUntilEventEnd = LT_MAX(MinFramesUntilEventEnd, remainingFramesUntilMinimumDuration);
 
     // Terminate the motion event
@@ -2592,7 +2592,7 @@ static void MotionSnapshotEventTest(const TiltImplReportingCallbacks *trc) {
         WaitForMotionEventTest(trc, expectedEvents, sub_test_case++);
     }
     s_motion->GetMotionState(&MotionState, &FramesOfMotion, &FramesNoMotion, NULL, NULL, &FramesSinceMotionStart, &SnapshotsUploaded);
-    remainingFramesUntilMinimumDuration = MinFramesMotionEventDuration - FramesSinceMotionStart > 0 ? MinFramesMotionEventDuration - FramesSinceMotionStart : 0;
+    remainingFramesUntilMinimumDuration = (s32)(MinFramesMotionEventDuration - FramesSinceMotionStart) > 0 ? MinFramesMotionEventDuration - FramesSinceMotionStart : 0;
     remainingFramesUntilEventEnd = LT_MAX(MinFramesUntilEventEnd, remainingFramesUntilMinimumDuration);
 
     // Terminate the motion event
@@ -2647,7 +2647,7 @@ static void MotionSnapshotEventTest(const TiltImplReportingCallbacks *trc) {
     }
 
     s_motion->GetMotionState(&MotionState, &FramesOfMotion, &FramesNoMotion, NULL, NULL, &FramesSinceMotionStart, &SnapshotsUploaded);
-    TILT_ASSERT_TRUE(trc, MinFramesMotionEventDuration - FramesSinceMotionStart > 0, "Error: MinFramesMotionEventDuration is not set high enough! Current value: %lu", LT_Pu32(MinFramesMotionEventDuration));
+    TILT_ASSERT_TRUE(trc, (s32)(MinFramesMotionEventDuration - FramesSinceMotionStart) > 0, "Error: MinFramesMotionEventDuration is not set high enough! Current value: %lu", LT_Pu32(MinFramesMotionEventDuration));
     remainingFramesUntilEventEnd = MinFramesMotionEventDuration - FramesSinceMotionStart;
 
     sub_test_case = test_case * 1000 + 300;

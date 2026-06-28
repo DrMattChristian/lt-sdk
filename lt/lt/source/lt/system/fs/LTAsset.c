@@ -369,7 +369,7 @@ static s32 FindFreeBlockAndErase(Asset *asset, u32 lastBlock) {
     }
     if (block < 0) {
         /* Continue search from 0 */
-        for (u16 maskIdx = 0; maskIdx < lastBlock >> 3; maskIdx++) {
+        for (u32 maskIdx = 0; maskIdx < lastBlock >> 3; maskIdx++) {
             u8 maskByte = allocBlocks->blockMask[maskIdx];
             if (maskByte == 0xff) continue;
             block = FindFreeBlockInMaskByte(asset, maskIdx, maskByte);

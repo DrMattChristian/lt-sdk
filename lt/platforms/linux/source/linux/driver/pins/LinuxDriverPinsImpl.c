@@ -224,16 +224,11 @@ static bool LinuxDriverPinsImpl_SetEdge(u32 nPin, LinuxGPIO_Trigger edge) {
             return false;
     }
 
-    //If the edge file is present, set the irq edge trigger to "both"
+    // Check if the edge file is present and set the irq edge trigger
     nCount = lt_snprintf(strFilePath, kMaxFilePathLength, "%s/gpio%u/edge", s_gpioDevfsPath, nPin);
-    if (access(strFilePath, F_OK) == 0) {
+    fd = open(strFilePath, O_WRONLY | O_TRUNC);
+    if (fd >= 0) {
         DLOG("export.edge", "gpio %u has edge file, setting to \"%s\"", nPin, strEdge);
-
-        fd = open(strFilePath, O_WRONLY | O_TRUNC);
-        if (fd < 0) {
-            LTLOG_YELLOWALERT("export.f.err", "Failed to open gpio %u, %s", nPin, strerror(errno));
-            return false;
-        }
 
         strEdgeLen = lt_strlen(strEdge);
         nCount = write(fd, strEdge, strEdgeLen);
