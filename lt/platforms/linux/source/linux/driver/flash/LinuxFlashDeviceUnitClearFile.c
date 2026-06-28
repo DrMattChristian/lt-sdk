@@ -139,7 +139,7 @@ LinuxFlashDeviceUnit_CreateHandle(void) {
                     kLTDeviceFlash_Magic_PartitionTable,
                     sizeof(s_partitions) / sizeof(s_partitions[0]),
                     /* Size = 2^(nDeviceSize + 6) bytes */
-                    25 - __builtin_clz((u64)s_flashInfo.nNumSectors * s_flashInfo.nSectorSize),
+                    57 - __builtin_clzll((u64)s_flashInfo.nNumSectors * s_flashInfo.nSectorSize),
                     0,
                     { 0, 0, 0, 0, 0 }
                 };

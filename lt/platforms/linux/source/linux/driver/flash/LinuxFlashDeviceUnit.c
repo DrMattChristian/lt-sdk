@@ -695,7 +695,7 @@ static bool LinuxFlashDeviceUnit_EraseSector(LTDeviceUnit hFlashDevice, u32 nSec
     if (fullFilePath) {
         int r = remove(fullFilePath);
         if (r != 0 && errno != ENOENT) {
-            LTLOG_REDALERT("erasesec.rm.failed", "Remove Error %d: %s.", r, fullFilePath);
+            LTLOG_REDALERT("erasesec.rm.failed", "Remove Error %d (%s): %s.", errno, strerror(errno), fullFilePath);
             bResult = false;
         } else if (r == 0) {
             DLOG("erasesec.rm", "Removed sector %u - %s", nSectorNumber, fullFilePath);

@@ -237,6 +237,9 @@ static bool LinuxDriverPinsImpl_SetEdge(u32 nPin, LinuxGPIO_Trigger edge) {
             LTLOG_YELLOWALERT("export.edge.wrerr", "Error setting edge trigger for gpio  %u (to %s). %s", nPin, strEdge, strerror(errno));
             return false;
         }
+    } else if (errno != ENOENT) {
+        LTLOG_YELLOWALERT("export.f.err", "Failed to open gpio %u edge file, %s", nPin, strerror(errno));
+        return false;
     }
     return true;
 }
