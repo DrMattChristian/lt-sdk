@@ -179,32 +179,6 @@ static LTSystemCryptoResult AES128_GCM_Init(LT_AES128_GCM_CTX *ctx, const u8 *ke
     lt_memcpy(ctx->CB, iv, ivLen);
     ctx->CB3 = 1;
     ctx->CB[3] = LT_SWAP32(ctx->CB3);
-    #if 0
-    // TODO: maybe useful if we need to use IV of more than 12 Byes.
-    u32 buf[AES128_BLOCK_LENGTH / 4];
-    if(ivLen == 12) {
-        // 96-bit IV
-        lt_memcpy(ctx->CB, iv, ivLen);
-        ctx->CB[AES128_BLOCK_LENGTH - 1] = 1;
-    } else {
-        // keep the last 16 bytes, value as the bit length of IV
-        lt_memset(buf, 0x00, sizeof(buf));
-        buf[3] = LT_BE32(ivLen << 3);
-        // GHash IV..0||0..Len(IV)
-        // !!!!!! TODO need to align pIV with u32 !!!!!!
-        p = iv;
-        // ctx->CB is 0 initially
-        while(ivLen > 0) {
-            nBlockLen = (ivLen < AES128_BLOCK_LENGTH ) ? ivLen : AES128_BLOCK_LENGTH;
-            LT_BN_Xor_Unsigned((u32 *)ctx->CB, (u32 *)ctx->CB, (u32 *)p, nBlockLen >> 2);
-            GMult(ctx, ctx->CB, ctx->CB);
-            ivLen -= nBlockLen;
-            p     += nBlockLen;
-        }
-        LT_BN_Xor_Unsigned((u32 *)ctx->CB, (u32 *)ctx->CB, buf, AES128_BLOCK_LENGTH >> 2);
-        GMult(ctx, ctx->CB, ctx->CB);
-    }
-    #endif
 
     // 7.1, step 3, make J for the later auth tag
     LT_AES128_Encrypt((u8 *)ctx->CB, ctx->eKey, (u8 *)ctx->J0);

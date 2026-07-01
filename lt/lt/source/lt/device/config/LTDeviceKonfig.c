@@ -343,10 +343,6 @@ define_LTObjectImplPublic(LTDeviceKonfig, LTDeviceKonfigImpl,
     ReadValueType);
 
 
-#if 0
-// Enable when we get rid of LTDeviceConfig and rename LTDeviceKonfig to LTDeviceConfig.
-define_LTObjectLibrary(1, NULL, NULL);
-#endif
 
 /******************************************************************************
  *  LOG

@@ -324,24 +324,6 @@ static bool LTDriverI2CBitbangImpl_SetDeviceConfiguration(LTDeviceUnit unit, con
 #define LOW 0
 #define HIGH 1
 
-#if 0
-/* TODO: make a better busy uDelay function */
-#define NUM_NOPS 10
-static void I2CusDelayBusy(u32 uSec) {
-    LTTime target = LTTime_Add(LT_GetCore()->GetKernelTime(), LTTime_Microseconds(uSec));
-    LTTime current = LTTime_Microseconds(0);
-    do {
-        u32 i = NUM_NOPS;
-        while (i) {
-            i--;
-            asm volatile ("nop\n\t"); \
-        }
-        current = LT_GetCore()->GetKernelTime();
-    }while (LTTime_IsLessThan(current, target));
-    return;
-}
-#endif
-
 #define SECTION_IRAM  __attribute__((section(".iram1.text")))
 SECTION_IRAM
 static void I2CusDelayBusy(u32 uSec) {
