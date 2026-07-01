@@ -689,7 +689,7 @@ static bool MultiROICalculationProc(LTMediaMotionDetectionAlgorithm_Parameters *
         }
 
         P("che.mot.roi.msg.sets", "Bounding Boxes of the Top %lu Largest Sets:\n", LT_Pu32(pMotionROIs->numRegions));
-        for (u8 n = 0; n < pMotionROIs->numRegions; n++) {
+        for (u32 n = 0; n < pMotionROIs->numRegions; n++) {
             P("che.mot.roi.coords", "ROI x1: %lu, y1: %lu, x2: %lu, y2: %lu\r\n",
               LT_Pu32(pMotionROIs->region[n].x1),
               LT_Pu32(pMotionROIs->region[n].y1),

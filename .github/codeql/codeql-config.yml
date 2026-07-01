@@ -1,0 +1,22 @@
+name: "LT SDK CodeQL Configuration"
+
+# Path exclusions for third-party and vendor code that we don't want CodeQL to scan.
+# These paths contain upstream/vendor code that we cannot fix and have been dismissed as false positives.
+paths-ignore:
+  # Opus audio codec (third-party)
+  - lt/lt/thirdparty/opus/**
+
+  # Speex DSP code (third-party, included in LT source tree for convenience)
+  - lt/lt/source/lt/media/dsp/speex/**
+
+  # STMicro vendor SDKs
+  - lt/platforms/st/thirdparty/**
+
+  # Apache Mynewt NimBLE stack (third-party)
+  - lt/platforms/common/source/common/driver/blenimble/apache-mynewt-nimble-1.5.0/**
+
+  # ESP32 bootROM patch (vendor code)
+  - lt/platforms/esp32/source/esp32/ltbootloader/esp32/spi_flash_rom_patch.c
+
+  # ESP32 vendor Python tools
+  - lt/platforms/esp32/source/esp32/mastering/image/espsecure.py

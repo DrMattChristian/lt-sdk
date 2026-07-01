@@ -121,7 +121,7 @@ LinuxFlashDeviceUnit_CreateHandle(void) {
                     LT_GetCore()->DebugBreak();;
                 }
             }
-            s64 nFlashSize = s_flashInfo.nNumSectors * s_flashInfo.nSectorSize;
+            s64 nFlashSize = (u64)s_flashInfo.nNumSectors * s_flashInfo.nSectorSize;
             fseek(s_flashFile, 0, SEEK_END);
             long int nCurSize = ftell(s_flashFile);
             while (nCurSize < nFlashSize) {
@@ -139,7 +139,7 @@ LinuxFlashDeviceUnit_CreateHandle(void) {
                     kLTDeviceFlash_Magic_PartitionTable,
                     sizeof(s_partitions) / sizeof(s_partitions[0]),
                     /* Size = 2^(nDeviceSize + 6) bytes */
-                    25 - __builtin_clz(s_flashInfo.nNumSectors * s_flashInfo.nSectorSize),
+                    57 - __builtin_clzll((u64)s_flashInfo.nNumSectors * s_flashInfo.nSectorSize),
                     0,
                     { 0, 0, 0, 0, 0 }
                 };
@@ -226,7 +226,7 @@ static u16 LinuxFlashDeviceUnit_GetWriteQuantum(LTDeviceUnit hFlashDevice) {
 static bool LinuxFlashDeviceUnit_EraseDevice(LTDeviceUnit hFlashDevice) {
     FlashInfo * pFlashInfo = GetFlashInfoPtr(hFlashDevice);
     if (!pFlashInfo) return false;
-    u64 nFlashSize = pFlashInfo->nNumSectors * pFlashInfo->nSectorSize;
+    u64 nFlashSize = (u64)pFlashInfo->nNumSectors * pFlashInfo->nSectorSize;
     bool bResult = false;
     pFlashInfo->mutex->API->Lock(pFlashInfo->mutex);
     if (-1 == fseek(s_flashFile, 0, SEEK_SET)) goto done;
@@ -246,7 +246,7 @@ static bool LinuxFlashDeviceUnit_EraseSector(LTDeviceUnit hFlashDevice, u32 nSec
     if (!pFlashInfo || nSectorNumber >= pFlashInfo->nNumSectors) return false;
     bool bResult = false;
     pFlashInfo->mutex->API->Lock(pFlashInfo->mutex);
-    if (-1 == fseek(s_flashFile, nSectorNumber * pFlashInfo->nSectorSize, SEEK_SET)) goto done;
+    if (-1 == fseek(s_flashFile, (u64)nSectorNumber * pFlashInfo->nSectorSize, SEEK_SET)) goto done;
     for (u32 i = 0; i < pFlashInfo->nSectorSize; ++i) {
         u8 emptyByte = 0xff;
         if (1 != fwrite(&emptyByte, sizeof(u8), 1, s_flashFile)) goto done;

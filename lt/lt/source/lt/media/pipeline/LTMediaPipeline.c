@@ -136,7 +136,7 @@ static void DecodeFrameTask(void * pClientData) {
     pCtx = iThread->GetThreadSpecificClientData(iThread->GetCurrentThread(), "pipe");
     if (!pCtx) return;
 
-    outputBufferSizeMs = pCtx->pipelineBufferFrames * pCtx->framePeriodms;
+    outputBufferSizeMs = (u64)pCtx->pipelineBufferFrames * pCtx->framePeriodms;
 
     if ((pCtx->pts + outputBufferSizeMs) < pProd->pts) return; // Too early
 

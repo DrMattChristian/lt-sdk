@@ -200,7 +200,7 @@ static bool TestTcpWrite(LTSocket socket) {
 static bool TestTcpRead(LTSocket socket) {
     s32 i = 0;
     ILTSocket *pSocket = lt_gethandleinterface(ILTSocket, socket);
-    for(s32 len = 1; len > 0 && ReplyMax-i-1 > 0; i += len) { // space for terminator
+    for(s32 len = 1; len > 0 && (s32)(ReplyMax-i-1) > 0; i += len) { // space for terminator
         len = pSocket->ReadSocket(socket, ReplyBuf+i, ReplyMax-i-1);
     }
     ReplyBuf[i] = 0; // in case we want to print it

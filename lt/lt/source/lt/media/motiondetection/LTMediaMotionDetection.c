@@ -1112,7 +1112,7 @@ static void LTMediaMotionDetection_MediaSourceMotionEventProc(LTMediaEvent event
         /* (2) Process the motion region(s) of interest and notify clients */
         /* ASPEN-7056: Update this to set ROI coordinates as floating point numbers between 0 and 1. */
         LTMediaMotionDetection_Regions *pMotionROIs = s_algorithm->API->GetMotionROIs(s_algorithm);
-        for (u8 n = 0; n < pMotionROIs->numRegions; n++) {
+        for (u32 n = 0; n < pMotionROIs->numRegions; n++) {
             P("med.proc.roi.coords", "ROI x1: %lu, y1: %lu, x2: %lu, y2: %lu\r\n",
                 LT_Pu32(pMotionROIs->region[n].x1),
                 LT_Pu32(pMotionROIs->region[n].y1),

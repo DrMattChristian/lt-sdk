@@ -139,7 +139,7 @@ static u16 MacOSFlashDeviceUnit_GetWriteQuantum(LTDeviceUnit hFlashUnit) { LT_UN
 static bool MacOSFlashDeviceUnit_EraseDevice(LTDeviceUnit hFlashDevice) {
     FlashInfo *pFlashInfo = GetFlashInfoPtr(hFlashDevice);
     if (!pFlashInfo) return false;
-    u64 nFlashSize = pFlashInfo->nNumSectors * pFlashInfo->nSectorSize;
+    u64 nFlashSize = (u64)pFlashInfo->nNumSectors * pFlashInfo->nSectorSize;
     bool bResult = false;
     pFlashInfo->mutex->API->Lock(pFlashInfo->mutex);
     if (-1 == fseek(s_pFlashFILE, 0, SEEK_SET)) goto done;
@@ -159,7 +159,7 @@ static bool MacOSFlashDeviceUnit_EraseSector(LTDeviceUnit hFlashDevice, u32 nSec
     if (!pFlashInfo || nSectorNumber >= pFlashInfo->nNumSectors) return false;
     bool bResult = false;
     pFlashInfo->mutex->API->Lock(pFlashInfo->mutex);
-    if (-1 == fseek(s_pFlashFILE, nSectorNumber * pFlashInfo->nSectorSize, SEEK_SET)) goto done;
+    if (-1 == fseek(s_pFlashFILE, (u64)nSectorNumber * pFlashInfo->nSectorSize, SEEK_SET)) goto done;
     for (u32 i = 0; i < pFlashInfo->nSectorSize; ++i) {
         u8 emptyByte = 0xff;
         if (1 != fwrite(&emptyByte, sizeof(u8), 1, s_pFlashFILE)) goto done;
@@ -284,7 +284,7 @@ LTDeviceUnit MacOSFlashDeviceUnit_CreateHandle(void) {
                     LT_GetCore()->DebugBreak();;
                 }
             }
-            s64 nFlashSize = s_flashInfo.nNumSectors * s_flashInfo.nSectorSize;
+            s64 nFlashSize = (u64)s_flashInfo.nNumSectors * s_flashInfo.nSectorSize;
             fseek(s_pFlashFILE, 0, SEEK_END);
             long int nCurSize = ftell(s_pFlashFILE);
             while (nCurSize < nFlashSize) {
@@ -302,7 +302,7 @@ LTDeviceUnit MacOSFlashDeviceUnit_CreateHandle(void) {
                     kLTDeviceFlash_Magic_PartitionTable,
                     sizeof(s_partitions) / sizeof(s_partitions[0]),
                     /* Size = 2^(nDeviceSize + 6) bytes */
-                    25 - __builtin_clz(s_flashInfo.nNumSectors * s_flashInfo.nSectorSize),
+                    57 - __builtin_clzll((u64)s_flashInfo.nNumSectors * s_flashInfo.nSectorSize),
                     0,
                     { 0, 0, 0, 0, 0 }
                 };
