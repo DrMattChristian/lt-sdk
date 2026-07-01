@@ -55,7 +55,7 @@ void* LTMediaPipelineRingQueueImpl_GetElementFromHead(LTMediaPipelineRingQueueIm
     u32 index;
     if (!queue || !queue->data) return NULL;
     index = (queue->head + elementIndex) % queue->elementCount;
-    return queue->data + (index * queue->elementSize);
+    return queue->data + ((LT_SIZE)index * queue->elementSize);
 }
 
 LT_SIZE LTMediaPipelineRingQueueImpl_GetContiguousElements(LTMediaPipelineRingQueueImpl * queue, u32 elementsFromHead) {
@@ -80,12 +80,12 @@ void LTMediaPipelineRingQueueImpl_AdvanceHead(LTMediaPipelineRingQueueImpl * que
         // Advance area wraps around the end of the buffer
         LT_SIZE firstPartSize = (LT_SIZE)queue->elementSize * (queue->elementCount - queue->head);
         LT_SIZE secondPartSize = advanceAreaSize - firstPartSize;
-        lt_memset(queue->data + (queue->head * queue->elementSize), 0, firstPartSize);
+        lt_memset(queue->data + ((LT_SIZE)queue->head * queue->elementSize), 0, firstPartSize);
         lt_memset(queue->data, 0, secondPartSize);
         queue->head = queue->head + elementCount - queue->elementCount;
     } else {
         // Advance area does not wrap around the end of the buffer
-        lt_memset(queue->data + (queue->head * queue->elementSize), 0, advanceAreaSize);
+        lt_memset(queue->data + ((LT_SIZE)queue->head * queue->elementSize), 0, advanceAreaSize);
         queue->head = queue->head + elementCount;
     }
 }
@@ -115,4 +115,3 @@ define_LTObjectImplPrivate(LTMediaPipelineRingQueue, LTMediaPipelineRingQueueImp
     GetContiguousElements,
     AdvanceHead,
 );
-
