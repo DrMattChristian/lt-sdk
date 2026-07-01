@@ -216,23 +216,6 @@ LTThreadImpl_QueueTaskProcRecordInternal(LTThreadImpl * pImpl, LTThread_TaskProc
     }
 }
 
-#if 0
-static u32 LTThreadImpl_TemporaryIncrementQTPDisableWarningCount(LTThreadImpl *pThreadImpl) {
-    u32 nFlagsOld = 0, nFlagsNew = 0;
-    if (pThreadImpl) {
-        while (1) {
-            nFlagsOld = LTAtomic_Load(&pThreadImpl->nThreadFlags);
-            nFlagsNew = ((nFlagsOld >> 6) + 1) & 3;
-            if (! nFlagsNew) break;
-            if (LTAtomic_CompareAndExchange(&pThreadImpl->nThreadFlags, nFlagsOld, ((nFlagsOld & ~(3<<6))) | (nFlagsNew << 6))) break;
-        }
-        if (nFlagsNew) lt_consoleprint("nFlagsOld = 0x%lx, nFlagsNew = 0x%lx, nFlags = 0x%lx\n", LT_Pu32(nFlagsOld), LT_Pu32(nFlagsNew), LT_Pu32(LTAtomic_Load(&pThreadImpl->nThreadFlags)));
-    }
-    return nFlagsNew;
-}
-#endif
-
-
 static bool LT_ISR_SAFE
 LTThreadImpl_QueueTaskProcPrivate(LTThread hThread, LTThread_TaskProc * pTaskProc, LTThread_ClientDataReleaseProc * pClientDataReleaseProc, void * pClientData, bool bIfRequired) {
     if (NULL == pTaskProc && NULL == pClientDataReleaseProc) return false;
@@ -243,12 +226,6 @@ LTThreadImpl_QueueTaskProcPrivate(LTThread hThread, LTThread_TaskProc * pTaskPro
     if (pImpl) {
         if (bInISR || LTKInterruptsAreDisabled()) {
             if (! bInISR) {
-#if 0
-                LTThread hCurrThread = LTThreadImpl_GetCurrentThread(); LTThreadImpl *pCurrThread = LTThreadImpl_ReserveThreadImpl(hCurrThread);
-                if (LTThreadImpl_TemporaryIncrementQTPDisableWarningCount(pCurrThread)) {
-                    LTLOG_YELLOWALERT("q.when.disabled", "thread %s called QueueTaskProc() to thread %s with interrupts disabled.  No bueno.", pCurrThread && *pCurrThread->name ? pCurrThread->name : "???", *pImpl->name ? pImpl->name : "???");
-                }
-#endif
                 /* set bInISR to true to pretend to be in ISR so the queue with interrupts disabled will work like a queue from an ISR */
                 bInISR = true;
             }
@@ -787,29 +764,6 @@ LTThreadImpl_CreateCoreThread(const char *pName, u32 nStackSize, u32 nPriority) 
 }
 
 #if LTHREADIMPL_DUMP_THREAD_LIST_ACTIVITY
-
-    #if 0
-        // copy this into LTShellCommandsImpl.c
-        void LTThread_Dumper(bool bOn);
-
-        static int
-        ShellCommand_Dumper(LTShell hShell, int argc, const char **argv) {
-            ILTShell * iShell = lt_gethandleinterface(ILTShell, hShell);
-            if (argc != 2) goto usage;
-            bool bOn = false;
-            if (0 == lt_strcmp(argv[1], "on")) bOn = true;
-            else if (0 == lt_strcmp(argv[1], "off")) bOn = false;
-            else goto usage;
-
-            LTThread_Dumper(bOn);
-            iShell->Print(hShell, "dumper: dumping is %s\n", argv[1]);
-            return 0;
-
-        usage:
-            iShell->Print(hShell, "usage: dumper <on|off>\n");
-            return 0;
-        }
-    #endif
 
 static void DumpPimple(LTThreadImpl *pImpl) {
     lt_consoleprint("0x%p(%s), pPrev=0x%p(%s), pNext = 0x%p(%s), WakeupTimer(%s)\n",
