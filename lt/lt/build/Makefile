@@ -92,8 +92,8 @@
 #                              An LT_PLATFORM_ROOT must have a build/platform/ subdirectory to qualify.
 #    LT_TARGET_ROOT          - the path in which the LT_MASTER_MAKEFILE will create a targets/
 #                              directory which will receive all intermediate and final build artifacts.
-#                              If not specified, the LT_MASTER_MAKEFILE will derive it as ../..
-#                              relative to this Makefile location i.e. at the same level LT_OS_ROOT exists in.
+#                              If not specified, the LT_MASTER_MAKEFILE will derive it as LT_ROOTS_BASE
+#                              (the directory containing lt/, platforms/, and products/; parent of LT_OS_ROOT).
 #    LT_PRODUCT              - the LT_PRODUCT variant within the product root to build for.  The term LT_PRODUCT_ROOT
 #                              is synonymous with "product family" and the term LT_PRODUCT is synonymous with "product
 #                              variant within a product family."  Product variants are located in subdirectories of the
@@ -206,10 +206,7 @@ endif
 
 # LT_TARGET_ROOT
 ifeq (,$(LT_TARGET_ROOT))
-    LT_TARGET_ROOT                  := $(abspath $(LT_ROOTS_BASE)/..)
-    ifeq (yes, $(shell if [ -d $(LT_TARGET_ROOT)/.git ] ; then echo yes; else echo no; fi;))
-      LT_TARGET_ROOT		        := $(abspath $(LT_TARGET_ROOT)/..)
-    endif
+    LT_TARGET_ROOT                  := $(abspath $(LT_ROOTS_BASE))
 else
     LT_TARGET_ROOT                  := $(abspath $(LT_TARGET_ROOT))
 endif
@@ -1045,7 +1042,7 @@ LT_SDKDOCS_PREVIEW_BROWSER          ?= firefox
 LT_TOOLCHAIN_HOST_ARCHITECTURE      := $(shell uname -m)
 LT_TOOLCHAIN_HOST_OS_NAME           := $(shell uname -s)
 # set default vendor toolchain root location
-LT_VENDOR_TOOLCHAINS_DIR            ?= $(abspath $(HOME)/lt-vendor-toolchains)
+LT_VENDOR_TOOLCHAINS_DIR            ?= $(abspath $(LT_OS_ROOT)/lt-vendor-toolchains)
 # allow the caller to set default vendor toolchain tarball location
 LT_VENDOR_TOOLCHAIN_TARBALLS_DIR    ?= $(abspath $(LT_OS_ROOT)/../../lt-toolchains)
 # output of build info for TeamCity
