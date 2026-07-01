@@ -13,9 +13,6 @@
 
 #include <lt/LT.h>
 #include <lt/device/adc/LTDeviceADC.h>
-#if 0
-#include <lt/device/analoginput/LTDeviceAnalogInput.h>
-#endif
 #include <lt/system/shell/LTSystemShell.h>
 
 DEFINE_LTLOG_SECTION("ltshell.analoginput");

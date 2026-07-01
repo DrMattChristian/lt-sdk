@@ -978,9 +978,6 @@ static ITilt * LoadTestLibrary(const char * pLibraryName)
     ITilt * const pUnitTest = lt_getlibraryinterface(ITilt, s_pTestLibrary);
     if (pUnitTest == NULL) {
         /* Temporary hack to allow TiltEngine 2.0 to be invoked from TiltEngine 1.0 */
-#if 0
-        ReportTiltEngineError("Cannot get ITilt interface on library %s", s_pTestLibraryName);
-#endif
         return NULL;
     }
     if (!pUnitTest->GetTestList(&s_pAllTests, &s_allTestsCount)) {
