@@ -84,9 +84,7 @@ void ESP32_MEM_REGION(IRAM) call_start_cpu0(void) {
 
     esp_rom_printf("cpu_start: CPU freq: %u MHz\n", nCpuFreqMHz);
 
-#if 0
-    /* TODO: RTC restore? */
-#endif
+
     /* Not all types of reset clear this register, so clear it here to prevent holding pins
      * unexpectedly.
      */

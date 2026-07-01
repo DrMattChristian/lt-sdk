@@ -339,19 +339,7 @@ void
         }
     }
 
-#if 0
-    if (nLogFlags & kLTCore_LogFlags_Reserved1) {
-        // reserved 1 is set - yellow alert that logging from a thread with isrs disabled is not ideal
-        // first make sure what we just logged wasn't already a yellow or red alert
-        nLogFlags &= kLTCore_LogFlags_LogTypeMask;
-        if (nLogFlags != kLTCore_LogFlags_LogTypeYellowAlert && nLogFlags != kLTCore_LogFlags_LogTypeRedAlert) {
-            LTThread hThread = LTThreadImpl_GetCurrentThread();
-            LTThreadImpl * pImpl = LTThreadImpl_PrivateDataToThreadImpl(LTHandle_ReservePrivateData(hThread));
-            LTLOG_YELLOWALERT("when.disabled", "thread %s called LTLOG() with interrupts disabled.  No bueno.", pImpl && *pImpl->name ? pImpl->name : "???");
-            LTHandle_ReleasePrivateData(hThread, LTThreadImpl_ThreadImplToPrivateData(pImpl));
-        }
-    }
-#endif
+
 }
 
 LT_PRINTF_FORMAT_FUNCTION(4) void

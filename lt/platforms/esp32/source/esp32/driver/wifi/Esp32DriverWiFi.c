@@ -276,15 +276,7 @@ static bool DriverWiFi_SetDriverState(LTDeviceUnit h_unit, LTWiFi_DriverState st
         }
         LOCK_WIFIAPI();
         esp_err_t ret;
-#if 0   // It seems counter productive to call stop in the UP flow. A DriverState_Down
-        // Would do this for us in the case we want to down-then-up the driver.
-        esp_err_t ret = esp_wifi_stop();
-        if (ret != ESP_OK) {
-            UNLOCK_WIFIAPI();
-            LTLOG_REDALERT("wifi.stop.err1", "Failed to stop. ret=%d\n", ret);
-            return false;
-        }
-#endif
+
         ret = esp_wifi_set_mode(WIFI_MODE_STA);
         if (ret != ESP_OK) {
             UNLOCK_WIFIAPI();
@@ -365,15 +357,7 @@ static bool DriverWiFi_SetOption(LTDeviceUnit h_unit, char const *option, void *
         return true;
     }
     if (lt_strcmp(option, "mac_address") == 0) {
-#if 0
-        LTMacAddress mac = *(LTMacAddress *)value;
-        // !!! DriverInfo.mac_address = mac;
-        char str[20];
-        MAC_Library->MacAddressToString(&mac, str, 0); // Not in std ':' notation
-        return esp_wifi_set_mac_address(str) == 0;
-#else
-        return false;
-#endif
+
     }
     if (lt_strcmp(option, "channel") == 0) {
         LOCK_WIFIAPI();
@@ -665,9 +649,7 @@ static void DriverWiFi_JoinCheck(LTDeviceUnit h_unit)
         unit->join_status = kLTWiFi_JoinStatus_Failed; // must unreg handler
     }
     if (unit->join_status >= kLTWiFi_JoinStatus_Success) { // includes Fail
-#if 0
-        /* Remove callbacks */
-#endif
+
         //return unit->join_status; // done, do not JoinCheck again
     }
     //return kLTWiFi_JoinStatus_Associating; // assumed
@@ -722,11 +704,7 @@ static bool DriverWiFi_ApStart(LTDeviceUnit h_unit, LTWiFi_ApInfo *ap_spec /* ca
     GET_UNIT_RETURN(unit, h_unit, false);
     if (!unit->is_up) return false;
     int result;
-#if 0
-    result = esp32_start_softap();
-#else
-    result = ESP_OK;
-#endif
+
     if (result != ESP_OK) {
         LTLOG("sap.fail", "soft AP failed: %d ssid: %s %s %d", result, ap_spec->ssid, ap_spec->pass, ap_spec->channel);
         return false;

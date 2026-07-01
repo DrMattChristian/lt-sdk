@@ -34,13 +34,7 @@ enum { kNumDigits = 8 };    /* Dan's breadboard has 8 digits, which is the maxim
 
 static LTDeviceLED_GroupDescriptor s_LEDGroupDescriptors[kNumLEDDeviceUnits] = {
     /* Device unit number is filled in during initialization. */
-    #if 0   /* The GPIO output for LED1 is SPI1 clock, which is used for the display Group. */
-    {
-        .m_pGroupName        = "LD1",
-        .m_groupType         = kLTDeviceLED_GroupType_IndicatorLamp,
-        .m_nNumElements      = 1
-    },
-    #endif
+
     {
         .m_pGroupName        = "LD2",
         .m_groupType         = kLTDeviceLED_GroupType_IndicatorLamp,
@@ -111,20 +105,7 @@ static void FinalizeLEDGroupGPIO(LEDGroupInstance * pInstance);
 static void ControlSingleColorLED(LEDInstance * pLED);
 static void ControlDualColorLED  (LEDInstance * pLED);
 
-#if 0   /* The GPIO output for LED1 is SPI1 clock, which is used for the display Group, making
-           it unavailable as an LED element. */
-static LEDInstance s_LD1 = {
-    .pPort                = GPIOA,
-    .pin                  = GPIO_PIN_5,
-    .pInstanceControlProc = ControlSingleColorLED,
-    .nColor                = 0
-};
 
-static LEDGroupState s_LD1_group = {
-    .pLEDs    = &s_LD1,
-    .nNumLEDs = 1
-};
-#endif
 
 static LEDInstance s_LD2 = {
     .pPort                = GPIOB,
@@ -159,14 +140,7 @@ static LTChipMAX7221DisplayState s_DisplayState = {
 };
 
 static LEDGroupInstance s_LEDGroupInstance[kNumLEDDeviceUnits] = {
-    #if 0   /* The GPIO output for LED1 is SPI1 clock, which is used for the display Group. */
-    {
-        .pGroupState              = &s_LD1_group
-        .nRefCount                = 0,
-        .pInitializeInterfaceProc = InitializeLEDGroupGPIO,
-        .pFinalizeInterfaceProc   = FinalizeLEDGroupGPIO
-    },
-    #endif
+
     {
         .pGroupState              = &s_LD2_group,
         .nRefCount                = 0,

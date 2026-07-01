@@ -319,19 +319,7 @@ esp_err_t bootloader_init(void)
 
     bootloader_init_mem();
 
-#if 0
-    #error NOT USING THIS
-    // check that static RAM is after the stack
-#ifndef NDEBUG
-    {
-        assert(&_bss_start <= &_bss_end);
-        assert(&_data_start <= &_data_end);
-        int *sp = esp_cpu_get_sp();
-        assert(sp < &_bss_start);
-        assert(sp < &_data_start);
-    }
-#endif
-#endif
+
     // clear bss section
     bootloader_clear_bss_section();
 #ifdef CONFIG_EFUSE_VIRTUAL

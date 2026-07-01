@@ -102,22 +102,7 @@ static inline bool IsISSIChip(void) {
 const Esp32SPIFlash_Chip * Esp32SPIFlash_Init(const char* pChipName) {
     s_pChipCommands = Esp32SPIFlash_GetChipCmds(pChipName);
 
-#if 0
-    esp_mspi_pin_init();
 
-    /*
-     * For Octal flash, it's hard to implement a read_id function in OPI mode for all vendors.
-     *   So we have to read it here in SPI mode, before entering the OPI mode.
-     */
-    bootloader_flash_update_id();
-
-    /*
-     * This function initialise the Flash chip to the user-defined settings.
-     *   In bootloader, we only init Flash (and MSPI) to a preliminary state, for being flexible to
-     *   different chips. In this stage, we re-configure the Flash (and MSPI) to required configuration
-     */
-    spi_flash_init_chip_state();
-#endif
 
     return (s_pChipCommands != NULL ? &g_rom_spiflash_chip : NULL);
 }

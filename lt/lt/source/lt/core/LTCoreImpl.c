@@ -633,24 +633,7 @@ LTCoreImpl_InvokeGenesisRunFunctionAndTerminateGenesisThread(void * pClientData)
     lt_destroyhandle(LTThreadImpl_GetCurrentThread());
 }
 
-#if 0
-static LTObjectApi *
-LTCoreImpl_GetLibraryObjectApi(LTLibrary * pLibrary, const char *objectName, const char *specialization) {
-    LTCOREIMPL_ASSERT_INSIDE_THREADCONTEXT();
-    if (pLibrary && objectName && *objectName && specialization && *specialization) {
-        const LTInterface ** pInterfaces = pLibrary->GetInterfaces();
-        if (pInterfaces) {
-            LTObjectApi *api;
-            while (NULL != (api = (LTObjectApi *)*pInterfaces++)) {
-                if ((kLTInterfaceType_LTObjectApi == api->GetObjectInterfaceType()) &&
-                    (0 == LTStdlibImpl_strcmp(api->GetObjectImplName(), specialization)) &&
-                    (0 == LTStdlibImpl_strcmp(api->GetObjectApiName(), objectName))) return api;
-            }
-        }
-    }
-    return NULL;
-}
-#endif
+
 
 /*******************************************************
  * LTCore_v1 public interface function implementation */
@@ -2005,29 +1988,7 @@ LTCoreImpl_EngageSleepModeTaskProc(void *pClientData) { LT_UNUSED(pClientData);
     }
 }
 
-#if 0
-static void
-LTCoreImpl_OnConsoleInputEvent(LTCore_ConsoleInputEventProc * pConsoleInputEventProc, void * pClientData) {
-    if (pConsoleInputEventProc) {
-        LTMutexImpl_Lock(s_mutex);
-          if (0 == s_hEvent) s_hEvent = LTEventImpl_CreateEvent(&s_ConsoleInputEventProcArgsDescriptor, &LTLoggerImpl_ConsoleInputEntryEvent, &LTLoggerImpl_ConsoleInputEntryEventComplete);
-          if (s_hEvent) LTEventImpl_RegisterForEvent(s_hEvent, pConsoleInputEventProc, pClientData);
-        LTMutexImpl_Unlock(s_mutex);
-    }
-}
 
-static void
-LTCoreImpl_NoConsoleInputEvent(LTCore_ConsoleInputEventProc * pConsoleInputEventProc) {
-    if (pConsoleInputEventProc) {
-        LTMutexImpl_Lock(s_mutex);
-        if (s_hEvent && LTEventImpl_UnregisterFromEvent(s_hEvent, pConsoleInputEventProc)) {
-            LTHandle_DestroyHandle(s_hEvent);
-            s_hEvent = 0;
-        }
-        LTMutexImpl_Unlock(s_mutex);
-    }
-}
-#endif
 
 static void
 LTCoreImpl_SetConsoleCharactersReceivedProc(LTCore_ConsoleCharactersReceivedProc * pCharReceivedProc, LTCore_ConsoleBreakReceivedProc * pBreakReceivedProc, void * pClientData) {

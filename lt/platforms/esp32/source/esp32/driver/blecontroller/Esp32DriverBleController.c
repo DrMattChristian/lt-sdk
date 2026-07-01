@@ -246,41 +246,7 @@ static int esp32_bt_controller_init(void) {
 
     return 0;
 }
-#if 0
-static int esp32_bt_controller_deinit(void) {
-    if (btdm_controller_status != ESP_BT_CONTROLLER_STATUS_INITED) {
-        LTLOG_REDALERT("DriverBTControllerDeinit", "Controller was not initialized");
-        return ESP_ERR_INVALID_STATE;
-    }
 
-    btdm_controller_deinit();
-
-    ESP32_REG(DPORT_WIFI_CLK_EN) &= ~kEsp32_RegisterDPORT_WIFI_CLK_BT_EN_M;
-    lt_sem_delete(pWakeupReqSem);
-    pWakeupReqSem = NULL;
-
-    btdm_controller_status = ESP_BT_CONTROLLER_STATUS_IDLE;
-
-    g_btdm_lpcycle_us = 0;
-    btdm_controller_set_sleep_mode(BTDM_MODEM_SLEEP_MODE_NONE);
-    esp_bt_power_domain_off();
-
-    return 0;
-}
-static int esp32_bt_controller_disable(void) {
-    if (btdm_controller_status != ESP_BT_CONTROLLER_STATUS_ENABLED) {
-        return ESP_ERR_INVALID_STATE;
-    }
-
-    btdm_controller_disable();
-    coex_disable();
-    esp32_phy_disable();
-    esp_wifi_set_ps(wifi_ps_mode);
-    btdm_controller_status = ESP_BT_CONTROLLER_STATUS_INITED;
-
-    return 0;
-}
-#endif
 static int esp32_bt_controller_enable(void) {
     /* WiFi crashes if WIFI_PS_NONE is used together with Bluetooth */
     esp_wifi_get_ps(&wifi_ps_mode);
@@ -325,17 +291,7 @@ static bool Esp32DriverBleController_Enable(bool enable) {
         }
 
     } else {
-#if 0 /* LT cannot clearly shutdown BT thread, leave BT initialized forever as this is the only consistent state */
-        if (esp32_bt_controller_disable() != 0) {
-            LTLOG_REDALERT("DriverBleControllerDisable", "Failed to disable the controller");
-            return false;
-        }
 
-        if (esp32_bt_controller_deinit() != 0) {
-            LTLOG_REDALERT("DriverBleControllerDeinit", "Failed to deinit the controller");
-            return false;
-        }
-#endif
     }
     return true;
 }

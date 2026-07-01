@@ -1127,19 +1127,7 @@ LTHostAPI_GetThreadCpuUtilization(void *pThread) {
         return true;
     }
 
-#if 0
-    static void DumpLTLibraryObjectMap(void) {
-        int numEntries = 0;
-        LTLibrary_LTObjectMapEntry * pEntry = s_pLTLibraryObjectMap;
-        printf("LTLibrary Object Map:\n");
-        while (pEntry) {
-            printf("%s:%s:%s\n", pEntry->specializationName, pEntry->objectApiName, pEntry->libraryName);
-            pEntry = pEntry->pNextEntry;
-            numEntries++;
-        }
-        printf ("%d entries\n", numEntries);
-    }
-#endif
+
 
     #define COMMAND_BASE "find %s -name \"*.so\" -exec strings {} + | grep \"^ltobject_export_string:\" | cut -f2- -d':' | sort"
     #define COMMAND_COUNT COMMAND_BASE " | wc -l -c"
@@ -1356,25 +1344,7 @@ static void PrintStackTistics(const char * pLabel, void * pCurrentStackPointer) 
 
     myprintf("[ltcorebsp.os.linux.%s]%s: %s prio% 3d, %llu/%llu stack bytes free, %llu used\n", pLabel, name, pThreadType, nPriority, nStackFree, nStackSize, nStackUsed);
 
-#if 0
-    p64 nStackUsedPlusFree = nStackUsed + nStackFree, nMask = 0xFFFFFFFFFFFFFFFF, nTest = 0xF000000000000000;
-    for (int i = 0; i < 11; i++) {
-        if (((nStackBegin & nTest) != (nStackEnd & nTest)) || ((nStackBegin & nTest) != (nStackCurrent & nTest))) break;
-        nMask >>= 4; nTest >>= 4; nStackBegin &= nMask; nStackEnd &= nMask; nStackCurrent &= nMask;
-    }
 
-    myprintf("stack: begin 0x%llx, end 0x%llx, current 0x%llx, size 0x%llx, used 0x%llx, free 0x%llx, used+free 0x%llx\n", nStackBegin, nStackEnd, nStackCurrent, nStackSize, nStackUsed, nStackFree, nStackUsedPlusFree);
-    myprintf("stack: begin  %llu, end  %llu, current  %llu, size  %llu, used   %llu, free  %llu, used+free  %llu\n", nStackBegin, nStackEnd, nStackCurrent, nStackSize, nStackUsed, nStackFree, nStackUsedPlusFree);
-
-    p64 r1 = (p64)&nStackBegin, r2 = (p64)&nStackEnd, r3 = (p64)&nStackCurrent, r4 = (p64)&nStackSize, r5 = (p64)&nStackUsed;
-    nMask = 0xFFFFFFFFFFFFFFFF; nTest = 0xF000000000000000;
-    for (int j = 0; j < 11; j++) {
-        if (((r1 & nTest) != (r2 & nTest)) || ((r1 & nTest) != (r3 & nTest)) || ((r1 & nTest) != (r4 & nTest)) || ((r1 & nTest) != (r5 & nTest))) break;
-        nMask >>= 4; nTest >>= 4; r1 &= nMask; r2 &= nMask; r3 &= nMask; r4 &= nMask; r5 &= nMask;
-    }
-    myprintf("rolll: r1 0x%llx, r2 0x%llx, r3 0x%llx, r4 0x%llx, r5 0x%llx\n", r1, r2, r3, r4, r5);
-    myprintf("rolll: r1  %llu, r2  %llu, r3  %llu, r4  %llu, r5  %llu\n", r1, r2, r3, r4, r5);
-#endif
 }
 #endif /* #if PRINT_STACKTISTICS */
 
