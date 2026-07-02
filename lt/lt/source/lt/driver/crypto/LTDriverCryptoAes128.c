@@ -276,26 +276,6 @@ void LT_AES128_Decrypt(const u8 input[AES128_BLOCK_LENGTH], const u32 ek[44], u8
     lt_memcpy(output, state, 16);
 }
 
-#if 0
-LTSystemCryptoResult LT_AES128_EncryptECB(const u8 key[AES128_KEY_LENGTH], const u8 plainText[AES128_BLOCK_LENGTH], u8 cipherText[AES128_BLOCK_LENGTH]) {
-    u32 *ek = lt_malloc(44 * sizeof(u32));
-    if (!ek) return kLTSystemCrypto_Result_OOM;
-    LT_AES128_Keysched(key, ek);
-    LT_AES128_Encrypt(plainText, ek, cipherText);
-    lt_free(ek);
-    return kLTSystemCrypto_Result_Ok;
-}
-
-LTSystemCryptoResult LT_AES128_DecryptECB(const u8 key[AES128_KEY_LENGTH], const u8 cipherText[AES128_BLOCK_LENGTH], u8 plainText[AES128_BLOCK_LENGTH]) {
-    u32 *ek = lt_malloc(44 * sizeof(u32));
-    if (!ek) return kLTSystemCrypto_Result_OOM;
-    LT_AES128_Keysched(key, ek);
-    LT_AES128_Decrypt(cipherText, ek, plainText);
-    lt_free(ek);
-    return kLTSystemCrypto_Result_Ok;
-}
-#endif
-
 /*******************************************************************************
  *  LOG
  *******************************************************************************

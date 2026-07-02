@@ -538,15 +538,7 @@ static void LT_ISR_SAFE FrameNotifyProc(void *pClientData) {
         DvpImpl_ReleaseVideoData(kLTDeviceVideo_Channel_ImageHD, &wd->pub);
     }
 }
-#if 0
-static void LT_ISR_SAFE FrameDropNotifyProc(void *pClientData) {
-    LT_UNUSED(pClientData);
-    s_drv->iEvent->NotifyEvent(s_drv->hFrameEvent,
-        (void *)NULL,
-        (u32)kLTDeviceVideo_Channel_ImageHD,
-        (u32)kLTDeviceVideo_Event_FrameDrop);
-}
-#endif
+
 /* =========================================================================
  * VSYNC rising-edge GPIO ISR — fires at the start of each new frame.
  *

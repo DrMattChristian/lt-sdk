@@ -30,14 +30,7 @@ static LTUtilityMacAddress *iMacAddress;
 
 static const char *ApSecurityStrings[kLTWiFi_ApSecurity_Max] = { LTWiFi_SecurityStrings };
 
-#if 0 //Not used at this time
-static LTWiFi_ApSecurity StringToApSecurity(const char *sec) {
-    for (int n = 0; n < kLTWiFi_ApSecurity_Max; n++) {
-        if (lt_strcmp(sec, ApSecurityStrings[n]) == 0) return n;
-    }
-    return kLTWiFi_ApSecurity_Unknown;
-}
-#endif
+
 
 /*******************************************************************************
  * Shell Commands
@@ -71,11 +64,7 @@ static bool ValidStr(char const *str, int max_len, char *error_msg) {
     return false;
 }
 
-#if 0
-static void PrintApInfo(const char *prefix, LTWiFi_ApInfo *ap) {
-    LTLOG_DEBUG("ap.info", "%s AP ssid: %s pass: %s sec: %s", prefix, ap->ssid, ap->pass, ApSecurityStrings[ap->security]);
-}
-#endif
+
 
 static void WiFiPrint(LTShell hShell, const char *fmt, ...) {
     lt_va_list args;
@@ -331,21 +320,7 @@ static int TestWiFi_GetMacAddress(LTShell hShell, int argc, const char *argv[]) 
     return 0;
 }
 
-#if 0
-static int TestWiFi_SetMacAddress(LTShell hShell, int argc, const char *argv[]) {
-    LTMacAddress mac;
-    if (argc < 2 || !iMacAddress->StringToMacAddress(argv[1], &mac)) {
-        WiFiPrint(hShell, "provide a MAC address in the form 11:22:33:44:55\n");
-        return 0;
-    }
-    if (iWiFi->SetMacAddress(&mac)) WiFiPrint(hShell, "MAC address set to: %s\n", argv[1]);
-    else {
-        WiFiPrint(hShell, "could not set MAC address\n");
-        return -1;
-    }
-    return 0;
-}
-#endif
+
 
 static int TestWiFi_Reset(LTShell hShell, int argc, const char *argv[]) {
     LT_UNUSED(argc);

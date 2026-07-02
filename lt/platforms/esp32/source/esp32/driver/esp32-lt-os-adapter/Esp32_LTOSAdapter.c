@@ -62,10 +62,7 @@ typedef struct handler_irq_info {
 #define LT_ESP32_WIFI_STATIC_RXBUF_NUM                              4
 #define LT_ESP32_WIFI_DYNAMIC_RXBUF_NUM                             8
 #define LT_ESP32_WIFI_DYNAMIC_TXBUF_NUM                             8
-#if 0 /* Disable AMPDU to save memory: minimum memory configuration from IDF */
-#define LT_ESP32_WIFI_TX_AMPDU                                      1
-#define LT_ESP32_WIFI_RX_AMPDU                                      1
-#endif
+
 #define LT_ESP32_WIFI_RXBA_AMPDU_WZ                                 6
 
 /* DEBUG */
@@ -2321,13 +2318,7 @@ static s32  coex_register_wifi_channel_change_callback_wrapper(void *cb)
     return (s32)coex_register_wifi_channel_change_callback(cb);
 }
 
-#if 0
-static void wrapThreadFunc(void * pClientData)
-{
-    taskData_t * pTaskData = (taskData_t *)pClientData;
-    pTaskData->pTaskProc(pTaskData->pClientData);
-}
-#endif
+
 
 /****************************************************************************
  * Name: lt_task_create

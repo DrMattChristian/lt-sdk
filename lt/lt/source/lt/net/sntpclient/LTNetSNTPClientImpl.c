@@ -81,24 +81,6 @@ TempDottedIPStringToIPAddressNetEndian(const char * pString) {
     return (n == 3 && octet_started) ? nRetVal : 0;
 }
 
-#if 0
-static LTTime
-LTTime_CreateTimeout(LTTime timeoutDuration) {
-    return LTTime_Add(s_pCore->GetKernelTime(), timeoutDuration);
-}
-
-static bool
-LTTime_IsTimeoutExpired(LTTime timeout) {
-    return LTTime_IsGreaterThanOrEqual(s_pCore->GetKernelTime(), timeout);
-}
-
-static LTTime
-LTTime_GetTimeoutRemaining(LTTime timeout) {
-    LTTime kernelTime = s_pCore->GetKernelTime();
-    return (LTTime_IsGreaterThanOrEqual(kernelTime, timeout)) ? LTTime_Zero() : LTTime_Subtract(timeout, kernelTime);
-}
-#endif
-
 static void HandleTimeout(void * pClientData);
 
 static void
@@ -109,23 +91,6 @@ KillTimer(LTNetSNTPClient_TimeRequest hRequest) {
         pData->hTimerThread = 0;
     }
 }
-
-#if 0
-static void
-HostToNetworkPacket(LTNetSNTPClient_Packet * pPacket) {
-    pPacket->rootDelay                      = LT_HTONL(pPacket->rootDelay);
-    pPacket->rootDispersion                 = LT_HTONL(pPacket->rootDispersion);
-    pPacket->refID                          = LT_HTONL(pPacket->refID);
-    pPacket->refTimeStamp.seconds           = LT_HTONL(pPacket->refTimeStamp.seconds);
-    pPacket->refTimeStamp.fractional        = LT_HTONL(pPacket->refTimeStamp.fractional);
-    pPacket->originateTimeStamp.seconds     = LT_HTONL(pPacket->originateTimeStamp.seconds);
-    pPacket->originateTimeStamp.fractional  = LT_HTONL(pPacket->originateTimeStamp.fractional);
-    pPacket->receiveTimeStamp.seconds       = LT_HTONL(pPacket->receiveTimeStamp.seconds);
-    pPacket->receiveTimeStamp.fractional    = LT_HTONL(pPacket->receiveTimeStamp.fractional);
-    pPacket->transmitTimeStamp.seconds      = LT_HTONL(pPacket->transmitTimeStamp.seconds);
-    pPacket->transmitTimeStamp.fractional   = LT_HTONL(pPacket->transmitTimeStamp.fractional);
-}
-#endif
 
 static void
 NetworkToHostPacket(LTNetSNTPClient_Packet * pPacket) {

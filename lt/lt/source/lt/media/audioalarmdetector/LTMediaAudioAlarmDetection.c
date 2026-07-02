@@ -190,14 +190,6 @@ static bool DetectLoudSound(LTMediaData *mediaData) {
      * When a loud sound is detected, we'll see a FAST increase in the audio PCM values
      * When the sound dissipates, the audio PCM Max values will drop
      */
-    #if 0
-    LTLOG_YELLOWALERT("loud.check","last %3d cur %3d delta %3d sensitivity %2d starting %3d",
-        (int)s_LastAudio_dB8,
-        (int)mediaData->meta.audio.pcm_max_dB8,
-        (int)mediaData->meta.audio.pcm_max_dB8 - (int)s_LastAudio_dB8,
-        (int)s_AlarmSensitivity,
-        (int)s_LoudSoundStartdB8 );
-    #endif
     /* a loud sound is currently being detected */
     if ( s_AlarmResult & kLTMediaAudioAlarmFlags_LoudSound ) {
         /* get time since the alarm started */

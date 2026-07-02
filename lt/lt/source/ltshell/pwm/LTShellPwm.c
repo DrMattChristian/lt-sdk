@@ -261,9 +261,6 @@ static void TestPwmPattern(LTSystemSchell *shell, u8 pin, int which, int xtra) {
                 int dur = elem->duration * tempoMultiplier;
                 int sustain = elem->sustain ? (elem->sustain * songElem->sustainDuration) : songElem->sustainDuration / 2;
 
-#if 0 // Don't show the note and timing info unless we're debugging
-                shell->API->Print(shell, " %-3s (%4d) {%4d} <%4d>\n", name, freq, dur, sustain);
-#endif
 
                 if (freq) {
                     FreqSustain(iThread, pin, freq, dur, sustain);

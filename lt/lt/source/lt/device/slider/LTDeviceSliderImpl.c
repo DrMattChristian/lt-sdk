@@ -196,20 +196,6 @@ static u32 GetIndexFromHandle(LTDeviceUnit handle) {
     return LT_U32_MAX;
 }
 
-#if 0
-// DRW : GetHandleFromIndex() unreferenced - error on MacOS
-static inline LTDeviceUnit GetHandleFromIndex(u32 index) {
-    LTDeviceUnit handle = 0;
-    if (index < s_nNumDeviceUnits) {
-        s_iArray->GetAt(s_pDeviceHandles, index, &handle);
-        return handle;
-    }
-    else {
-        return 0;
-    }
-}
-#endif
-
 static LTDeviceUnit GetHandleFromInstance(SliderDevice_Instance * pI) {
     for (u32 i = 0; i < s_nNumDeviceUnits; i++) {
         LTDeviceUnit handle = 0;
@@ -224,21 +210,6 @@ static LTDeviceUnit GetHandleFromInstance(SliderDevice_Instance * pI) {
     return 0;
 }
 
-#if 0
-// DRW : GetInstanceFromIndex() unreferenced - error on MacOS
-static inline SliderDevice_Instance * GetInstanceFromIndex(u32 index) {
-    LTDeviceUnit handle = 0;
-    if (index < s_nNumDeviceUnits) {
-        s_iArray->GetAt(s_pDeviceHandles, index, &handle);
-    }
-    if (handle) {
-        SliderDevice_Instance * pInstance =
-            (SliderDevice_Instance *)(LT_GetCore()->GetHandlePrivateData(handle));
-        return pInstance;
-    }
-    return NULL;
-}
-#endif
 /*****************************************************************************/
 
 static void IntCallback(void * pData);

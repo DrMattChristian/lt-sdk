@@ -460,15 +460,7 @@ LTLibraryManager_OpenLibrary(const char * pLibraryName) {
         s_pRecord->hActiveThread = 0;
         s_pRecord->pLibrary      = pLibrary;
 
-#if 0
-        // figure out whether to keep the thread around or destroy it
-        if (hThread) {
-            if (LTThreadImpl_IsKeepAliveAfterLibInitFlagSet(hThread)) s_pRecord->hActiveThread = hThread;
-            else iThread->Destroy(hThread);
-        }
-#else
         if (hThread) iThread->Destroy(hThread);
-#endif
 
             
         #if LIBLOG_LOADSCOPED
