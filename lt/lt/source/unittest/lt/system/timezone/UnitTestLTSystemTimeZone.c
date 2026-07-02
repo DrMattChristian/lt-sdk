@@ -505,20 +505,20 @@ static void TestUserTimeZoneDSTNorthern(Tilt *tilt, LTTime utcOffsetSTD, LTTime 
     TILT_EXPECT_FALSE(tilt, s_pSystemTimeZone->IsClockTimeUTCDaylightSaving(utc3, NULL), "After DST %lld < %lld", LT_Ps64(LTTime_GetSeconds(utcDSTEnd)), LT_Ps64(LTTime_GetSeconds(utc3)));
 
     LTTime utcLocal = s_pSystemTimeZone->ClockTimeUTCToLocal(utc1, NULL);
-    s32 local = LTTime_GetSeconds(utcLocal);
-    s32 utc = LTTime_GetSeconds(utc1);
-    s32 offset = LTTime_GetSeconds(utcOffsetSTD);
-    TILT_EXPECT_TRUE(tilt, local - utc == offset, "STD offset %ld - %ld == %ld", LT_Ps32(local), LT_Ps32(utc), LT_Ps32(offset));
+    s64 local = LTTime_GetSeconds(utcLocal);
+    s64 utc = LTTime_GetSeconds(utc1);
+    s64 offset = LTTime_GetSeconds(utcOffsetSTD);
+    TILT_EXPECT_TRUE(tilt, local - utc == offset, "STD offset %lld - %lld == %lld", LT_Ps64(local), LT_Ps64(utc), LT_Ps64(offset));
     utcLocal = s_pSystemTimeZone->ClockTimeUTCToLocal(utc2, NULL);
     local = LTTime_GetSeconds(utcLocal);
     utc = LTTime_GetSeconds(utc2);
     offset = LTTime_GetSeconds(utcOffsetDST);
-    TILT_EXPECT_TRUE(tilt, local - utc == offset, "DST offset %ld - %ld == %ld", LT_Ps32(local), LT_Ps32(utc), LT_Ps32(offset));
+    TILT_EXPECT_TRUE(tilt, local - utc == offset, "DST offset %lld - %lld == %lld", LT_Ps64(local), LT_Ps64(utc), LT_Ps64(offset));
     utcLocal = s_pSystemTimeZone->ClockTimeUTCToLocal(utc3, NULL);
     local = LTTime_GetSeconds(utcLocal);
     utc = LTTime_GetSeconds(utc3);
     offset = LTTime_GetSeconds(utcOffsetSTD);
-    TILT_EXPECT_TRUE(tilt, local - utc == offset, "STD offset %ld - %ld == %ld", LT_Ps32(local), LT_Ps32(utc), LT_Ps32(offset));
+    TILT_EXPECT_TRUE(tilt, local - utc == offset, "STD offset %lld - %lld == %lld", LT_Ps64(local), LT_Ps64(utc), LT_Ps64(offset));
 }
 
 static void TestUserTimeZoneDSTSouthern(Tilt *tilt, LTTime utcOffsetSTD, LTTime utcOffsetDST, LTTime utcDSTStart, LTTime utcDSTEnd, const char *pNameSTD, const char *pNameDST, const char *pOlsonName, const char *pDescription) {
@@ -533,20 +533,20 @@ static void TestUserTimeZoneDSTSouthern(Tilt *tilt, LTTime utcOffsetSTD, LTTime 
     TILT_EXPECT_FALSE(tilt, s_pSystemTimeZone->IsClockTimeUTCDaylightSaving(utc3, NULL), "After DST %lld < %lld", LT_Ps64(LTTime_GetSeconds(utcDSTEnd)), LT_Ps64(LTTime_GetSeconds(utc3)));
 
     LTTime utcLocal = s_pSystemTimeZone->ClockTimeUTCToLocal(utc1, NULL);
-    s32 local = LTTime_GetSeconds(utcLocal);
-    s32 utc = LTTime_GetSeconds(utc1);
-    s32 offset = LTTime_GetSeconds(utcOffsetSTD);
-    TILT_EXPECT_TRUE(tilt, local - utc == offset, "STD offset %ld - %ld == %ld", LT_Ps32(local), LT_Ps32(utc), LT_Ps32(offset));
+    s64 local = LTTime_GetSeconds(utcLocal);
+    s64 utc = LTTime_GetSeconds(utc1);
+    s64 offset = LTTime_GetSeconds(utcOffsetSTD);
+    TILT_EXPECT_TRUE(tilt, local - utc == offset, "STD offset %lld - %lld == %lld", LT_Ps64(local), LT_Ps64(utc), LT_Ps64(offset));
     utcLocal = s_pSystemTimeZone->ClockTimeUTCToLocal(utc2, NULL);
     local = LTTime_GetSeconds(utcLocal);
     utc = LTTime_GetSeconds(utc2);
     offset = LTTime_GetSeconds(utcOffsetDST);
-    TILT_EXPECT_TRUE(tilt, local - utc == offset, "DST offset %ld - %ld == %ld", LT_Ps32(local), LT_Ps32(utc), LT_Ps32(offset));
+    TILT_EXPECT_TRUE(tilt, local - utc == offset, "DST offset %lld - %lld == %lld", LT_Ps64(local), LT_Ps64(utc), LT_Ps64(offset));
     utcLocal = s_pSystemTimeZone->ClockTimeUTCToLocal(utc3, NULL);
     local = LTTime_GetSeconds(utcLocal);
     utc = LTTime_GetSeconds(utc3);
     offset = LTTime_GetSeconds(utcOffsetSTD);
-    TILT_EXPECT_TRUE(tilt, local - utc == offset, "STD offset %ld - %ld == %ld", LT_Ps32(local), LT_Ps32(utc), LT_Ps32(offset));
+    TILT_EXPECT_TRUE(tilt, local - utc == offset, "STD offset %lld - %lld == %lld", LT_Ps64(local), LT_Ps64(utc), LT_Ps64(offset));
 }
 
 static void TestUserTimeZoneSTD(Tilt *tilt, LTTime utcOffsetSTD, LTTime utcOffsetDST, LTTime utcDSTStart, LTTime utcDSTEnd, const char *pNameSTD, const char *pNameDST, const char *pOlsonName, const char *pDescription) {
@@ -555,15 +555,15 @@ static void TestUserTimeZoneSTD(Tilt *tilt, LTTime utcOffsetSTD, LTTime utcOffse
     LTTime utc1 = LTTime_Seconds(1706770800); // STD
     LTTime utc2 = LTTime_Seconds(1719813600); // STD
     LTTime utcLocal = s_pSystemTimeZone->ClockTimeUTCToLocal(utc1, NULL);
-    s32 local = LTTime_GetSeconds(utcLocal);
-    s32 utc = LTTime_GetSeconds(utc1);
-    s32 offset = LTTime_GetSeconds(utcOffsetSTD);
-    TILT_EXPECT_TRUE(tilt, local - utc == offset, "STD offset %ld - %ld == %ld", LT_Ps32(local), LT_Ps32(utc), LT_Ps32(offset));
+    s64 local = LTTime_GetSeconds(utcLocal);
+    s64 utc = LTTime_GetSeconds(utc1);
+    s64 offset = LTTime_GetSeconds(utcOffsetSTD);
+    TILT_EXPECT_TRUE(tilt, local - utc == offset, "STD offset %lld - %lld == %lld", LT_Ps64(local), LT_Ps64(utc), LT_Ps64(offset));
     utcLocal = s_pSystemTimeZone->ClockTimeUTCToLocal(utc2, NULL);
     local = LTTime_GetSeconds(utcLocal);
     utc = LTTime_GetSeconds(utc2);
     offset = LTTime_GetSeconds(utcOffsetSTD);
-    TILT_EXPECT_TRUE(tilt, local - utc == offset, "STD offset %ld - %ld == %ld", LT_Ps32(local), LT_Ps32(utc), LT_Ps32(offset));
+    TILT_EXPECT_TRUE(tilt, local - utc == offset, "STD offset %lld - %lld == %lld", LT_Ps64(local), LT_Ps64(utc), LT_Ps64(offset));
 }
 
 static void TestLTTimeZoneUserData(Tilt *tilt) {
