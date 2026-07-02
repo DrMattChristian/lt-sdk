@@ -872,88 +872,7 @@ LTThreadImpl_RelinkWakeupTimerThreadInternal(LTThreadImpl *pImpl) {
 #endif
 }
 
-#if 0
-static LTTime
-LTThreadImpl_GetThreadWakeupFireTimeInternal(LTThreadImpl *pImpl) {
-    struct TimerRecord * pTimerRecord = pImpl->pFirstTimerRecord;
-    while (pTimerRecord) {
-        if (pTimerRecord->nFlags & kLTThreadImpl_TimerFlagsIsWakeupTimer) return pTimerRecord->fireTime;
-        pTimerRecord = pTimerRecord->pNext;
-    }
-    return LTTime_Zero();
-}
 
-
-/* This implements insertion sort of thread records ordered by thread soonest firing timer time.  We're not doing this, but I keep it here for
-   possible ressurrection at a later date.  See massive comment below in function LTThreadImpl_GetSoonestFiringThreadWakeupTimerFireTime() */
-
-static void
-LTThreadImpl_RelinkWakeupTimerThreadInternal(LTThreadImpl *pImpl) {
-    /* first unlink the thread */
-    if (pImpl == s_pThreadsRunningListHead) {
-        s_pThreadsRunningListHead = pImpl->pNext;
-        if (pImpl->pNext) pImpl->pNext->pPrev = NULL;
-        pImpl->pNext = NULL;
-    }
-    else {
-        pImpl->pPrev->pNext = pImpl->pNext;
-        if (pImpl->pNext) pImpl->pNext->pPrev = pImpl->pPrev;
-        pImpl->pPrev = NULL;
-        pImpl->pNext = NULL;
-    }
-
-    /* now link it in */
-    LTThreadImpl *pLinkBefore = s_pThreadsRunningListHead;
-    LTThreadImpl *pLinkAfter = NULL;
-    if (LTAtomic_Load(&pImpl->nThreadFlags) & kLTThread_FlagsHasSofwareWakeupTimer) {
-        /* thread has wakeup timer; link it before the first thread without a wakeup timer
-           or before the first thread with a wakeup timer whose fire time is > this one's */
-        LTTime fireTime = LTThreadImpl_GetThreadWakeupFireTimeInternal(pImpl);
-        while (pLinkBefore) {
-            if (0 == (LTAtomic_Load(&pLinkBefore->nThreadFlags) & kLTThread_FlagsHasSofwareWakeupTimer)) break;
-            LTKMonitorEnter(pLinkBefore->pMonitor);
-            if (LTTime_IsLessThanOrEqual(fireTime, LTThreadImpl_GetThreadWakeupFireTimeInternal(pLinkBefore))) {
-                LTKMonitorExit(pLinkBefore->pMonitor);
-                break;
-            }
-            LTKMonitorExit(pLinkBefore->pMonitor);
-            pLinkAfter = pLinkBefore;
-            pLinkBefore = pLinkBefore->pNext;
-        }
-    }
-    else {
-        /* thread [no longer] has wakeup timer; link it before the first thread without a wakeup timer */
-        while (pLinkBefore) {
-            if (0 == (LTAtomic_Load(&pLinkBefore->nThreadFlags) & kLTThread_FlagsHasSofwareWakeupTimer)) break;
-            pLinkAfter = pLinkBefore;
-            pLinkBefore = pLinkBefore->pNext;
-        }
-    }
-
-    if (pLinkBefore) {
-        if (pLinkBefore->pPrev == NULL) {
-            LT_ASSERT(pLinkBefore == s_pThreadsRunningListHead);
-            s_pThreadsRunningListHead->pPrev = pImpl;
-            pImpl->pNext = s_pThreadsRunningListHead;
-            s_pThreadsRunningListHead = pImpl;
-        }
-        else {
-            pImpl->pNext = pLinkBefore;
-            pImpl->pPrev = pLinkBefore->pPrev;
-            pLinkBefore->pPrev = pImpl;
-        }
-    }
-    else if (pLinkAfter) {
-        pImpl->pPrev = pLinkAfter;
-        pImpl->pNext = pLinkAfter->pNext;
-        pLinkAfter->pNext = pImpl;
-    }
-    else {
-        LT_ASSERT(s_pThreadsRunningListHead == NULL);
-        s_pThreadsRunningListHead = pImpl;
-    }
-}
-#endif
 
 LTTime
 LTThreadImpl_GetSoonestFiringThreadWakeupTimerFireTime(void) {
@@ -1106,13 +1025,7 @@ LTThreadImpl_Start(LTThread hThread, LTThread_InitProc * pInitProc, LTThread_Exi
             #else
                 LTThreadImpl_RelinkWakeupTimerThreadInternal(pImpl);
             #endif
-        #if 0
-            if (s_pThreadsRunningListHead) {
-                s_pThreadsRunningListHead->pPrev = pImpl;
-                pImpl->pNext = s_pThreadsRunningListHead;
-            }
-            s_pThreadsRunningListHead = pImpl;
-        #endif
+
         }
         else {
             LTLOG_YELLOWALERT("start.failed", "Failed to start thread");
@@ -1894,55 +1807,6 @@ LTLIBRARY_DEFINITION;
  *  _________________________________
  *  ThreadMain() - THE BIG MAGILLA !!
  */
-#if 0
-static void
-NumberToString(u32 number, char *buff, u32 buffLen) {
-    char *pChar = buff + buffLen - 1;
-    if (0 == number) *pChar = '0';
-    else while (number) {
-            if (pChar < buff) {
-                /* won't fit in allotted space, reset with 'E' and clear with spaces */
-                pChar = buff + buffLen - 1; *pChar-- = 'E'; while (pChar >= buff) *pChar-- = ' ';
-                break;
-            }
-            *pChar-- = (number % 10) + '0'; number /= 10;
-         }
-}
-
-static void ReportStackAndHeap(const char * tag) {
-        u32 stackSize = 0, stackCurr = 0, stackMax = 0, heapCurr = 0, heapMax = 0;
-        LTCore * pCore = LT_GetCore();
-        ILTThread * iThread = lt_getlibraryinterface(ILTThread, pCore);
-        iThread->GetStackUsage(iThread->GetCurrentThread(), &stackSize, &stackCurr, &stackMax);
-        iThread->GetHeapUsage(iThread->GetCurrentThread(), &heapCurr, &heapMax);
-        enum { kBuffSize = 48 };
-        char *buff = lt_malloc(kBuffSize);
-        if (buff) {
-            pCore->ConsolePutString("\nMAGILLA "); pCore->ConsolePutString(tag); pCore->ConsolePutString(":\n");
-            pCore->ConsolePutString(" __________________________________________\n");
-//                                   0  x     x1     x   2    x   3     x   4
-//                                   01234567890123456789012345678901234567890123 4
-            pCore->ConsolePutString(" | stack   curr    max | heap curr      max\n");
-            lt_memset(buff, ' ', kBuffSize -  2); buff[kBuffSize-1] = 0; buff[1] = buff[23] = '|';
-            NumberToString(stackSize, buff +  3, 5);
-            NumberToString(stackCurr, buff +  9, 6);
-            NumberToString(stackMax,  buff + 16, 6);
-            NumberToString(heapCurr,  buff + 25, 9);
-            NumberToString(heapMax,   buff + 35, 8);
-            pCore->ConsolePutString(buff);
-            lt_free(buff);
-        }
-}
-
-LT_TEXT_RAM_CRITICAL(1) static void LTThreadImpl_ThreadMain2(void * pClientData);
-LT_TEXT_RAM_CRITICAL(1) static void LTThreadImpl_ThreadMain(void * pClientData) {
-    LTThread hThread = *((LTThread *)pClientData);
-    LTThreadImpl * pImpl = LTThreadImpl_ReserveThreadImpl(hThread);
-    ReportStackAndHeap(pImpl->name);
-    LTThreadImpl_ThreadMain2(pClientData);
-    LTThreadImpl_ReleaseThreadImpl(hThread, pImpl);
-}
-#endif
 
 LT_TEXT_RAM_CRITICAL(1) /* non-static */ void LTThreadImpl_ThreadMain(void * pClientData) {
     /* This is the main thread dispatch loop! */
@@ -1954,12 +1818,7 @@ LT_TEXT_RAM_CRITICAL(1) /* non-static */ void LTThreadImpl_ThreadMain(void * pCl
         return;
     }
 
-#if 0
-    nMask = LTThreadImpl_IsProhibitLoggingFlagSet() ? LTThreadImpl_SetProhibitLoggingFlag(false), 1 : 0;
-    LTLOG("threadmain", "%s running with stacksize %d",
-        pImpl->name, (int)LTAtomic_Load(&pImpl->nStackSize));
-    if (nMask) LTThreadImpl_SetProhibitLoggingFlag(true);
-#endif
+
 
     // enter and exit the global monitor to ensure that we don't start executing before Start() completes
         // NOTE: must use LTLOG_LOGSTOMP prior have to log stomp which disables and uses interrupt buffer while Start() is still modifying thread state
@@ -2109,13 +1968,7 @@ LT_TEXT_RAM_CRITICAL(1) /* non-static */ void LTThreadImpl_ThreadMain(void * pCl
             }
             else kernelTime = LTTime_Infinite();
 
-#if 0           /* DRW: 18-Jul-2024 disabling max wait 200ms hack */
-                if (kernelTime.nNanoseconds > 200000000) kernelTime.nNanoseconds = 200000000;
-                /* DRW : LT-166: temporary hack to always wake up at least every 200ms
-                         to unblock so we will re-loop to check again for any ISR messages posted.
-                         If an ISR message is delivered after we check for and move them
-                         to the task proc queue above, but before the Wait is enacted, we will miss it.  */
-#endif
+
 
             LTThread_ThreadState threadState = LTThreadImpl_GetCurrentThreadState();
             LTThreadImpl_SetCurrentThreadState(kLTThread_ThreadState_WaitBlocked);
@@ -2169,14 +2022,7 @@ LT_TEXT_RAM_CRITICAL(1) /* non-static */ void LTThreadImpl_ThreadMain(void * pCl
     }
     LTKEnableInterrupts(nMask);
 
-#if 0
-//#ifdef LT_DEBUG
-    nMask = LTThreadImpl_IsProhibitLoggingFlagSet() ? LTThreadImpl_SetProhibitLoggingFlag(false), 1 : 0;
-    LTLOG("threadmain", "%s exiting with %d total allocated TaskProcRecords (%d queued, %d in free pool)",
-        pImpl->name, (int)(pImpl->nTaskProcRecordsQueued + pImpl->nFreeTaskProcRecords), pImpl->nTaskProcRecordsQueued, pImpl->nFreeTaskProcRecords);
-    if (nMask) LTThreadImpl_SetProhibitLoggingFlag(true);
-//#endif
-#endif
+
 
     // purge all of the remaining queued TaskProcRecords by calling their pClientDataReleaseProc
     // safe to access them outside monitor when state is terminate pending
@@ -2207,13 +2053,7 @@ LT_TEXT_RAM_CRITICAL(1) /* non-static */ void LTThreadImpl_ThreadMain(void * pCl
     // do this after calling the exit proc so that clients can retrieve their client data in their exit procs
     LTThreadImpl_ReleaseThreadSpecificClientData(pImpl);
 
-#if 0
-#ifdef LT_DEBUG
-    nMask = LTThreadImpl_IsProhibitLoggingFlagSet() ? LTThreadImpl_SetProhibitLoggingFlag(false), 1 : 0;
-    LTLOG_DEBUG("threadmain", "Heap Usage: current=%lu bytes, max=%lu bytes", LT_Pu32(LTAtomic_Load(&pImpl->nCurrHeapUsage)), LT_Pu32(LTAtomic_Load(&pImpl->nMaxHeapUsage)));
-    if (nMask) LTThreadImpl_SetProhibitLoggingFlag(true);
-#endif
-#endif
+
 
     // take the thread out of the thread table
     // must enter global monitor before local monitor, then remove record and exit local monitor, then global
