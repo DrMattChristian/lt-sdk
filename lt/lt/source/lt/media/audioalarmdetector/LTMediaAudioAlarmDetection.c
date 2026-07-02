@@ -190,7 +190,7 @@ static bool DetectLoudSound(LTMediaData *mediaData) {
      * When a loud sound is detected, we'll see a FAST increase in the audio PCM values
      * When the sound dissipates, the audio PCM Max values will drop
      */
-        /* a loud sound is currently being detected */
+    /* a loud sound is currently being detected */
     if ( s_AlarmResult & kLTMediaAudioAlarmFlags_LoudSound ) {
         /* get time since the alarm started */
         LTTime dt = LTTime_Subtract(LT_GetCore()->GetKernelTime(), s_LoudSoundStartTime);

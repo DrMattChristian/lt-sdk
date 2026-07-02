@@ -3824,7 +3824,7 @@ static int ParseEncryptedExtensions(const LTTlsContext *tlsCtx, const u8 *buf, c
 
             default:
                 ; // we just ignore all here.
-                        }
+        }
 
         p += extensionDataLen;
     }
@@ -4560,7 +4560,7 @@ static int ProcessNewTicket(LTTlsContext *tlsCtx, u8 *buf, u8 *end) {
 
                 default:
                     ;
-                                }
+            }
 
             p += extensionDataLen;
         }
