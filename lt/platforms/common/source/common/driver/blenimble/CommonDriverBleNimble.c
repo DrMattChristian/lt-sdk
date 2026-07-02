@@ -727,12 +727,6 @@ static void HandleMtuEvent(struct ble_gap_event *event, LTBleDeviceHandle hDevic
     P("ge.15", "mtu %d/%d ch 0x%02x", event->mtu.value, s_mtu, event->mtu.conn_handle);
 }
 
-#if 0
-//keeping for debugging purposes
-static void HandleNotifyTxEvent(struct ble_gap_event *event, LTBleDeviceHandle hDevice) {
-    P("ge.13", "notifytx %d ch 0x%02x ah 0x%02x", event->notify_tx.indication, event->notify_tx.conn_handle, event->notify_tx.attr_handle);
-}
-#endif
 
 // Synchronous event handlers - these must return immediately with meaningful values
 static int HandleRepeatPairing(struct ble_gap_event *event, LTBleDeviceHandle hDevice) {
@@ -755,14 +749,6 @@ static int HandleRepeatPairing(struct ble_gap_event *event, LTBleDeviceHandle hD
     return ret;
 }
 
-#if 0
-// keeping for future
-static int HandleConnUpdateReq(struct ble_gap_event *event, LTBleDeviceHandle hDevice) {
-    // Handle connection update request synchronously if needed
-    // For now, just accept all requests
-    return 0;
-}
-#endif
 
 // Asynchronous event handler function type
 typedef void (*AsyncEventHandler)(struct ble_gap_event *event, LTBleDeviceHandle hDevice);
@@ -833,12 +819,6 @@ static int GapEventCallbackWrapper(struct ble_gap_event *event, void *arg) {
             ret = HandleRepeatPairing(event, hDevice);
             break;
 
-#if 0
-// keeping for future
-        case BLE_GAP_EVENT_CONN_UPDATE_REQ:
-            ret = HandleConnUpdateReq(event, hDevice);
-            break;
-#endif
 
         // Asynchronous events - queued to BLE host thread with specific handlers
         case BLE_GAP_EVENT_CONNECT:
@@ -868,13 +848,7 @@ static int GapEventCallbackWrapper(struct ble_gap_event *event, void *arg) {
         case BLE_GAP_EVENT_MTU:
             ret = QueueSpecificAsyncHandler(HandleMtuEvent, event, hDevice);
             break;
-#if 0
-// keeping for debugging
-        case BLE_GAP_EVENT_NOTIFY_TX:
-            ret = QueueSpecificAsyncHandler(HandleNotifyTxEvent, event, hDevice);
-            break;
-#endif
-        // all not-occured and ignored events
+        // all not-occurred and ignored events
         // case BLE_GAP_EVENT_NOTIFY_RX:
         // case BLE_GAP_EVENT_L2CAP_UPDATE_REQ:
         // case BLE_GAP_EVENT_TERM_FAILURE:

@@ -587,11 +587,6 @@ CBK void OnDhcpChange(struct netif *netif, u8_t oldState, u8_t newState) {
             LTLOG("dhcp", "lease of %s renewed from %s, lease time %lu",
                       offered_ip, server_ip, LT_Pu32(dhcp->offered_t0_lease));
         }
-        #if 0
-        PR(">>>>>>>> IP: %s ", FormIp4Addr(&tran->ipAddr));
-        PR("GW: %s ",          FormIp4Addr(&tran->ipGate));
-        PR("OIP: %s\n",        FormIp4Addr(&dhcp->offered_ipAddr));
-        #endif
         tran->linkConnected = true;
         NotifyTransport(tran, kLTTransport_Event_Up);
     }

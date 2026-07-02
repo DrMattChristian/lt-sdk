@@ -35,18 +35,6 @@ static LTUtilityMessagePack *s_mpLib;
 #define WATCH(e) //P("=================== %s %s\n", e->typeLabel, e->valueLabel);
 #define COUNTOF(a) (sizeof(a)/sizeof(a[0]))
 
-#if 0
-static void DumpCode(LTMessagePack_Obj *mp) {
-    P("size: %ld (head %p next %p end %p)\n", LT_Pu32(s_mpLib->GetPosition(mp)), mp->head, mp->next, mp->end);
-    int i = 0;
-    for (u8 *cp = mp->head; cp < mp->next; cp++, i++) {
-        P("0x%02x, ", *cp);
-        if ((i+1) % 10 == 0) P("\n");
-        if (i > 1000) break; // safety break
-    }
-    if (i % 10 != 0) P("\n");
-}
-#endif
 
 /*******************************************************************************
  * Basic Init/Free Tests
