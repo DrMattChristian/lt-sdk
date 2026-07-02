@@ -154,16 +154,16 @@ SetTimeStampInNetworkByteOrderWithKernelTime(LTTime kernelTime, LTNetSNTPClient_
 
 static LTTime
 GetTimeUTCSince1970(const LTNetSNTPClient_Timestamp * pTimestamp) {
-    u64 nMillisecondsSince1970 = ((u64)pTimestamp->fractional * 1000 + 0xFFFFFFFF/2) / 0xFFFFFFFF;
-    // ISSUE: should use < 1000, but I hit the assert with nMillisecondsSince1970 == 1000
-    // ASSERT(nMillisecondsSince1970 < 1000);
-    LT_ASSERT(nMillisecondsSince1970 <= 1000);
+    u64 nMillisecondsSince1970 = ((u64)pTimestamp->fractional * 1000) >> 32;
+    LT_ASSERT(nMillisecondsSince1970 < 1000);
 
     // NTP era handling: NTP v3 uses u32 seconds from 1900-01-01 epoch.
     // This field wraps at 2^32 seconds (Feb 7, 2036 06:28:16 UTC).
-    // Detect the wrap: if the NTP seconds value represents a time before
-    // the Unix epoch (1970), the u32 has overflowed.  Add back the NTP era
-    // (2^32 seconds) to get the correct absolute time.
+    // Detect the wrap: in current (and foreseeable) deployment, SNTP is
+    // queried post-2024, so receiving a pre-1970 timestamp means the u32
+    // wrapped.  Add back one NTP era (2^32 seconds) to compensate.
+    // Note: this is not a general NTP era algorithm — it assumes the
+    // reference time is always at or past the second NTP era (1968+).
     u64 ntpSeconds = (u64)pTimestamp->seconds;
     if (ntpSeconds < (MS_BETWEEN_1900_AND_1970 / 1000)) {
         ntpSeconds += (u64)1 << 32; // account for NTP era wrap
