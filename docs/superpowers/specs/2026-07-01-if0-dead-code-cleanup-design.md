@@ -94,7 +94,7 @@ This table serves as the review artifact — each row is approved or rejected.
 
 | Risk | Mitigation |
 |---|---|
-| A `#if 0` block contains symbols used outside the block | Investigation phase explicitly checks for this; supended blocks flagged as keep if dependencies exist |
+| A `#if 0` block contains symbols used outside the block | Investigation phase explicitly checks for this; suspended blocks flagged as keep if dependencies exist |
 | Build breaks after removal | PR-level build verification catches this before merge |
 | Block has no git history and no changelog context | Classified as Complex; reviewed individually |
 | A block looks dead but is intentionally preserved for reference | Investigation phase checks for inline documentation; author may be identifiable from changelogs |

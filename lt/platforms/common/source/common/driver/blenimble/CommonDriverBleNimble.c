@@ -848,7 +848,7 @@ static int GapEventCallbackWrapper(struct ble_gap_event *event, void *arg) {
         case BLE_GAP_EVENT_MTU:
             ret = QueueSpecificAsyncHandler(HandleMtuEvent, event, hDevice);
             break;
-        // all not-occured and ignored events
+        // all not-occurred and ignored events
         // case BLE_GAP_EVENT_NOTIFY_RX:
         // case BLE_GAP_EVENT_L2CAP_UPDATE_REQ:
         // case BLE_GAP_EVENT_TERM_FAILURE:
