@@ -357,7 +357,7 @@ static bool DriverWiFi_SetOption(LTDeviceUnit h_unit, char const *option, void *
         return true;
     }
     if (lt_strcmp(option, "mac_address") == 0) {
-
+        return false;
     }
     if (lt_strcmp(option, "channel") == 0) {
         LOCK_WIFIAPI();
@@ -703,7 +703,7 @@ static bool DriverWiFi_ApStart(LTDeviceUnit h_unit, LTWiFi_ApInfo *ap_spec /* ca
 {
     GET_UNIT_RETURN(unit, h_unit, false);
     if (!unit->is_up) return false;
-    int result;
+    int result = ESP_OK;
 
     if (result != ESP_OK) {
         LTLOG("sap.fail", "soft AP failed: %d ssid: %s %s %d", result, ap_spec->ssid, ap_spec->pass, ap_spec->channel);
