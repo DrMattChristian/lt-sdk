@@ -172,12 +172,6 @@ static void UpdateToEndOfLine(ShellPriv *priv, const char *str) {
 
 static void LTNetworkShellImpl_LogEntryEventProc(LTLogEntry *hLogEntries, u32 nNumLogEntries, void *pClientData) {
     LT_UNUSED(hLogEntries); LT_UNUSED(nNumLogEntries); LT_UNUSED(pClientData);
-    #if 0
-    ConnectedClientInfo *pInfo = (ConnectedClientInfo *) pClientData;
-    WriteString(pInfo, pString, length);
-    LTSocketOutputBuffer hBuffer = s_pSocket->GetOutputBuffer(pInfo->hSocket);
-    s_pOutputBuffer->NotifyWriteComplete(hBuffer);
-    #endif
 }
 
 static void ClientSocketDataArrived(LTSocket hSocket, LTSocketInputBuffer hBuffer, void *pClientData) {

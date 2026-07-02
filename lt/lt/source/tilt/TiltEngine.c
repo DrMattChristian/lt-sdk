@@ -191,72 +191,10 @@ static void MemCheckStart(void) {
     VALGRIND_DO_QUICK_LEAK_CHECK;
     GetMemoryUsage(&s_MemCheck.startMemoryUsage);
 
-#if 0
-    /* DRW : heap info changed to enumeration api, not snapshot api, and the old method only worked in debug mode
-             with special flags set in LTCoreDebugHelpers.h, so it wasn't run anyway.  Disabling to avoid compiler error
-             to expedite merge to main for leak tracking support enhancements. */
-    // Record list of heap allocations
-    if (!LT_GetCore()->SnapshotSystemRAM(0, &s_MemCheck.heapAllocsBeforeRun, &s_MemCheck.heapAllocsBeforeRunCount)) {
-        MessageCallback(kTilt_Message_Level_Debug, "(Heap allocation snapshot failed - no heap alloc checks at end)");
-        s_MemCheck.comparingHeapAllocs = false;
-    }
-#endif
 }
 
 static void MemCheckEnd(void) {
     // Compare heap allocations after unloading test library with those before
-#if 0
-    /* DRW : heap info changed to enumeration api, not snapshot api, and the old method only worked in debug mode
-             with special flags set in LTCoreDebugHelpers.h, so it wasn't run anyway.  Disabling to avoid compiler error
-             to expedite merge to main for leak tracking support enhancements. */
-    if (s_MemCheck.comparingHeapAllocs) {
-        LTCore_HeapAllocSnapshot * heapAllocsAfterRun = NULL;
-        LT_SIZE heapAllocsAfterRunCount = 0;
-        LT_GetCore()->SnapshotSystemRAM(0, &heapAllocsAfterRun, &heapAllocsAfterRunCount);
-
-        // Note: There will always be one additional heap allocation, which is the
-        // heapAllocsAfterRun array that was created by the second SnapshotSystemRAM
-        // call!  We compensate in the following test and in the "special check" below.
-
-        if (heapAllocsAfterRunCount - 1 != s_MemCheck.heapAllocsBeforeRunCount) {
-            PrintText(kTilt_Color_Red, "\nHeap alloc count mismatch: %lu before run, %lu after\n",
-                    LT_PLT_SIZE(s_MemCheck.heapAllocsBeforeRunCount), LT_PLT_SIZE(heapAllocsAfterRunCount-1));
-            if (heapAllocsAfterRunCount - 1 > s_MemCheck.heapAllocsBeforeRunCount) {
-                for (LT_SIZE ii = 0; ii < heapAllocsAfterRunCount; ++ii) {
-                    void * matchPtr = heapAllocsAfterRun[ii].pAddr;
-                    bool ptrFound = false;
-                    for (LT_SIZE jj = 0; jj < s_MemCheck.heapAllocsBeforeRunCount; ++jj) {
-                        if (s_MemCheck.heapAllocsBeforeRun[jj].pAddr == matchPtr) {
-                            ptrFound = true;
-                            break;
-                        }
-                    }
-
-                    // Special check: if the additional allocation is just the heapAllocsAfterRun
-                    // array, ignore it; this is expected.
-                    if (!ptrFound && matchPtr == heapAllocsAfterRun) {
-                        ptrFound = true;
-                    }
-
-                    if (!ptrFound) {
-                        LTCore_HeapAllocSnapshot * const snapshot = &heapAllocsAfterRun[ii];
-                        const char * fileName = snapshot->callsite.file;
-                        if (fileName == NULL) {
-                            fileName = "(none)";
-                        }
-                        PrintText(kTilt_Color_Red, "  Pointer %p, size %lu, file \"%s\", line %lu\n",
-                                matchPtr, LT_Pu32(snapshot->nBytes), fileName, LT_PLT_SIZE(snapshot->callsite.line));
-                    }
-                }
-            }
-        }
-        lt_free(heapAllocsAfterRun);
-        heapAllocsAfterRun = NULL;
-        lt_free(s_MemCheck.heapAllocsBeforeRun);
-        s_MemCheck.heapAllocsBeforeRun = NULL;
-        s_MemCheck.comparingHeapAllocs = false;
-    }
-#endif
 
     // Compare available RAM after unloading test library with that before
 

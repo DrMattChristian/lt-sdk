@@ -901,11 +901,6 @@ CBK void OnDhcpChange(struct netif *netif, u8_t old_state, u8_t new_state) {
         tran->ipAddr = netif->ip_addr;
         tran->ipMask = netif->netmask;
         tran->ipGate = netif->gw;
-        #if 0
-        PR(">>>>>>>> IP: %s ", FormIp4Addr(&tran->ipAddr));
-        PR("GW: %s ",          FormIp4Addr(&tran->ipGate));
-        PR("OIP: %s\n",        FormIp4Addr(&dhcp->offered_ipAddr));
-        #endif
         tran->linkConnected = true;
         iEvent->NotifyEvent(tran->driverData->hEvent, 0, kLTTransport_Event_Up);
     }

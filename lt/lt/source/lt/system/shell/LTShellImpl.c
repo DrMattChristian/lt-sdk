@@ -292,17 +292,7 @@ static MetaChar EvaluateMetaChar(ShellPriv *pShell, char c) {
 }
 
 LT_INLINE void ToggleInsertMode(ShellPriv *pShell) {
-    #if 0
-    /* We don't have visual indicators for mode.
-       Don't toggle - leave in insert mode: */
-    pShell->insert = !pShell->insert;
-    #endif
     pShell->insert = true;
-    #if 0
-    // Not sure how to show insert/overwrite mode - DECSCUSR does not work on minicom. */
-    LTShellImpl_Print(pShell->handle, "\x1b[%d q", pShell->insert ? 5 : 1);
-    LTShellImpl_Print(pShell->handle, "\x1b[?%dc", pShell->insert ? 4 : 6);
-    #endif
 }
 
 static void EraseOneChar(ShellPriv *pShell, int which) {

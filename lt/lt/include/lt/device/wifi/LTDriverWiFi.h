@@ -87,30 +87,6 @@ struct LTDriverWiFiApi {
      * @return Current driver state (up, down, RF_down, reset, init, etc.)
      */
 
-#if 0
-    void (*SetApMode)(LTDeviceUnit unit, LTWiFi_ApInfo *ap);
-    /**<
-     * @brief Settings for AP mode (soft-AP)
-     *
-     * If the STA mode has already been started with SetDriverState(up), then
-     * then concurrent STA+AP operation will occur. If STA is not started, then
-     * only AP mode will occur.
-     *
-     * The parameter provides the AP settings (SSID, password, security mode,
-     * channel, and bandwidth.) Any null fields will use default settings.
-     * Note that the channel field may get ignored if the STA is already
-     * operating on a specific channel.
-     *
-     * Setting AP mode may cause a WiFi reset and the state machine must call
-     * GetDriverState() to determine when WiFi is operational again.
-     *
-     * A NULL ap pointer disables the AP mode.
-     *
-     * @param[in] unit: specifies the driver unit instance
-     * @param[in] ap: AP settings if required for the specified mode
-     * @return Current driver state (up, down, RF_down, reset, init, etc.)
-     */
-#endif
 
     bool (*SetOption)(LTDeviceUnit unit, char const *option, void *value);
     /**<

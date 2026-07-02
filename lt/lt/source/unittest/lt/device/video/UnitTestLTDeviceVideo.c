@@ -294,15 +294,6 @@ void RunSingle(void) {
     // S.video->Start(kLTDeviceVideo_Channel_ImageSD);
     // S.video->Start(kLTDeviceVideo_Channel_H264SD);
 
-    #if 0
-    // capture image
-    S.thread->API->Sleep(LTTime_Milliseconds(500));
-    LTDeviceVideo_ISPTuningMode m = kLTDeviceVideo_ISPTuningMode3;
-    S.video->SetParam(kLTDeviceVideo_Param_ISPTuningMode, &m);
-    S.thread->API->Sleep(LTTime_Milliseconds(500));
-    S.video->CaptureSingle(kLTDeviceVideo_Channel_ImageHD, kLTDeviceVideo_Frame_Jpeg, S.frame, sizeof(S.frame));
-    // S.video->CaptureSingle(kLTDeviceVideo_Channel_ImageSD, kLTDeviceVideo_Frame_Jpeg, S.frame, sizeof(S.frame));
-    #else
     // stream
     LTDeviceVideo_Channel channel = kLTDeviceVideo_Channel_H264HD;
     S.thread->API->QueueTaskProc(S.thread, Capture, NULL, &channel);
@@ -311,7 +302,6 @@ void RunSingle(void) {
         S.thread->API->Sleep(LTTime_Milliseconds(1));
         ++cnt;
     }
-    #endif
 
     // stop
     S.video->Stop(kLTDeviceVideo_Channel_ImageHD);

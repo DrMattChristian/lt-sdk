@@ -1176,15 +1176,6 @@ ShellCommand_LTRun(LTShell hShell, int argc, const char ** argv) {
 
 static int ShellCommand_TelnetD(LTShell hShell, int argc, const char ** argv) {
     LT_UNUSED(argc); LT_UNUSED(argv); LT_UNUSED(hShell);
-#if 0
-    ILTShell * iShell = lt_gethandleinterface(ILTShell, hShell);
-    if (argc != 1) {
-        iShell->PutString(hShell, "usage: telnetd\n");
-    }
-    else {
-        iShell->Print(hShell, "telnetd: telnetd is %s\n", LTNetworkShellImpl_StartNetworkShellSubsystem() ? "active on port 4444" : "inactive");
-    }
-#endif
     return 0;
 }
 

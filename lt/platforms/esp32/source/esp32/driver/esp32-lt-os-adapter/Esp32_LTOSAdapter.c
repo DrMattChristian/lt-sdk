@@ -91,34 +91,6 @@ typedef struct handler_irq_info {
 #define MAC_LEN                                                     6
 #define DEFAULT_PS_MODE                                             WIFI_PS_NONE
 
-#if 0 && defined(LT_DEBUG_WIRELESS_INFO) && LT_DEBUG_WIRELESS_INFO
-#define LOG_ENTRY() LTLOG_DEBUG("enter", "%s", __FUNCTION__)
-#define LOG_LEAVE() LTLOG_DEBUG("enter", "%s", __FUNCTION__)
-#define LOG_ENTRY_TIMER(pt)
-#define LOG_ENTRY_TIMER_ARM(pt, us, repeat)
-#define LOG_TXDONE_ENTRY(...) LTLOG_DEBUG(__VA_ARGS__);
-//#define LOG_ENTRY_TIMER(pt) LTLOG_DEBUG("timer", "%s %p", __FUNCTION__, pt)
-//#define LOG_ENTRY_TIMER_ARM(pt, us, repeat) LTLOG_DEBUG("timer.arm", "%s %p us %u repeat %d", __FUNCTION__, pt, us, repeat)
-#define LOG_ENTRY_TASK(name,stack_depth,prio,handle) LTLOG_DEBUG("enter", "%s: %s stack %d prio %d handle 0x%lx", __FUNCTION__, name, stack_depth, prio, LT_PLT_SIZE(handle))
-//#define LOG_ENTRY_MUTEX(handle) LTLOG_DEBUG("enter", "%s: %lx", __FUNCTION__, LT_PLT_SIZE(handle))
-#define LOG_ENTRY_MUTEX(handle)
-#define LOG_ENTRY_SEM(handle)
-//#define LOG_ENTRY_SEM(handle) LTLOG_DEBUG("enter", "%s: %lx", __FUNCTION__, LT_PLT_SIZE(handle))
-#define LOG_ENTRY_ISR()
-//LTLOG_DEBUG("enter", "%s", __FUNCTION__)
-#define LOG_ENTRY_ISR2()
-//LTLOG_DEBUG("enter", "%s", __FUNCTION__)
-#define LOG_WORKER_ENTRY() LTLOG_DEBUG("enter", "%s", __FUNCTION__)
-#define LOG_MUTEX_FAIL() LTLOG_DEBUG("mutex.fail", "%s: FAIL", __FUNCTION__)
-//#define LOG_MUTEX_OK() LTLOG_DEBUG("mutex.ok", "%s: OK", __FUNCTION__)
-#define LOG_MUTEX_OK()
-#define LOG_ENTRY_GET_CURR_TASK()
-#define LOG_ENTRY_MSG_WAIT(size) LTLOG_DEBUG("enter", "%s: size %lu", __FUNCTION__,LT_Pu32(size))
-#define LOG_MSG_SUCCESS(item,size)
-//#define LOG_MSG_SUCCESS(item,size) LTLOG_DEBUG("ok", "%s: msg 0x%lx", __FUNCTION__,LT_Pu32(*((u32*)item)))
-#define LOG_MSG_FAIL() LT_ASSERT(0)
-#define WIFI_DRIVER_FAIL() LT_ASSERT(0)
-#else
 #define LOG_ENTRY()
 #define LOG_LEAVE()
 #define LOG_TXDONE_ENTRY(...)
@@ -137,7 +109,6 @@ typedef struct handler_irq_info {
 #define LOG_MSG_SUCCESS(item,size)
 #define LOG_MSG_FAIL()
 #define WIFI_DRIVER_FAIL()
-#endif
 
 #define _VA_LIST_
 #define TIMER_INITIALIZED_VAL                                       (0x5aa5a55a)

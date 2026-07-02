@@ -162,23 +162,6 @@ void TestReleaseClientData(TiltHarness *harness) {
     LT_UNUSED(MyTimerClientDataReleaseProc);
 
 
-#if 0
-    // ________________________________________________________________________________________________
-    // This is here to help me catch all of the cases in the tests to be written when they are written!
-typedef enum LTThread_ReleaseReason {                 /**< represents the reason client data is released */
-    kLTThread_ReleaseReason_NullReason         =  0, /**< useful for variable initialization; value never delivered to callbacks */
-    kLTThread_ReleaseReason_Because             =  1, /**< no specific reason given, just because */
-    kLTThread_ReleaseReason_TaskProcComplete    =  2, /**< the queued TaskProc completed normally. */
-    kLTThread_ReleaseReason_TaskProcQueueFull   =  3, /**< the LTThread TaskProc queue was full.  Note in this case the client is called back in their own thread before QueueTaskProc returns */
-    kLTThread_ReleaseReason_TaskProcPurge       =  4, /**< thread is shutting down due to Terminate(); all existing queued TaskProcs are discarded unexecuted */
-    kLTThread_ReleaseReason_ThreadSpecificReset =  5, /**< thread specific client data was set to a new value or cleared */
-    kLTThread_ReleaseReason_ThreadSpecificPurge =  6, /**< thread is shutting down due to Terminate(); all thread specific data is released */
-    kLTThread_ReleaseReason_TimerKilled         =  7, /**< user has called KillTimer */
-    kLTThread_ReleaseReason_TimerPurge          =  8, /**< thread is shutting down due to Terminate(); all timers are being killed */
-    kLTThread_ReleaseReason_EventUnregistered   =  9, /**< the client unregistered for notification from the event  */
-    kLTThread_ReleaseReason_EventDestroyed      = 10, /**< the client was registered for notification on the LTEvent when the LTEvent was destroyed. */
-} LTThread_ReleaseReason;
-#endif
 }
 
 /*******************************************************************************

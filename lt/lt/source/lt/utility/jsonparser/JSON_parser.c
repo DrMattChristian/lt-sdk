@@ -790,40 +790,6 @@ JSON_parser_char(JSON_parser jc, int next_char)
     UTF-32. It returns true if things are looking ok so far. If it rejects the
     text, it returns false.
 */
-#if 0
-    int next_class, next_state;
-
-/*
-    Store the current char for error handling
-*/
-    jc->current_char = next_char;
-
-/*
-    Determine the character's class.
-*/
-    if (next_char < 0) {
-        jc->error = JSON_E_INVALID_CHAR;
-        return false;
-    }
-    if (next_char >= 128) {
-        next_class = C_ETC;
-    } else {
-        next_class = ascii_class[next_char];
-        if (next_class <= __) {
-            set_error(jc);
-            return false;
-        }
-    }
-
-    if (!add_char_to_parse_buffer(jc, next_char, next_class)) {
-        return false;
-    }
-
-/*
-    Get the next state from the state transition table.
-*/
-    next_state = state_transition_table[jc->state][next_class];
-#else
     /* rewrite the above to reuse next_char to mean next_class, saving 4 bytes of stack space */
     int next_state;
 
@@ -858,7 +824,6 @@ JSON_parser_char(JSON_parser jc, int next_char)
 */
     next_state = state_transition_table[jc->state][next_char];
 
-#endif
     if (next_state >= 0) {
 /*
     Change the state.

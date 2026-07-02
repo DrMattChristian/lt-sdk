@@ -1715,16 +1715,7 @@ typedef_LTENUM_SIZED(LTCore_SleepAction, u32) {
  * LTCore library DEBUG and LOGGING macros *
  ******************************************
  * LT_ASSERT  */
-#if 0
-    /* DRW 07-Feb-23: we're enabling asserts in release mode now, "for great justice" */
-    #ifdef LT_DEBUG
       #define LT_ASSERT(x)    LT_ISR_SAFE   (void)((!!(x)) || (false == LT_GetCore()->AssertFailed(__FILE__, __LINE__, "" #x "")) || (LT_GetCore()->DebugBreak(), 0))
-    #else
-      #define LT_ASSERT(x)    LT_ISR_SAFE
-    #endif
-#else
-      #define LT_ASSERT(x)    LT_ISR_SAFE   (void)((!!(x)) || (false == LT_GetCore()->AssertFailed(__FILE__, __LINE__, "" #x "")) || (LT_GetCore()->DebugBreak(), 0))
-#endif
 
 /*************************************
  * LTLOG LOGGING AND PRINTING MACROS *

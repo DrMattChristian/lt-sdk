@@ -21,15 +21,6 @@
     #error "RISC-V double precision float is NOT supported"
 #endif
 
-#if 0
-  /* TODO: Do I need to do anything about this? */
-  #if __riscv_cmodel_medlow
-      /* TODO: This is what the BL702L has . */
-      #warning "RISC-V medlow cmodel"
-  #elif __riscv_cmodel_medany
-      #warning "RISC-V medany cmodel"
-  #endif
-#endif
 
 /* Initial mstatus value (set MPIE to enable interrupts, MPP to machine mode) */
 #define LTK_ARCH_RISC_V_START_MSTATUS       0x1880
